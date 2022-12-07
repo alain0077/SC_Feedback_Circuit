@@ -4,19 +4,59 @@
 
 using namespace std;
 
-#define ins0 1
+// 最長LFSRの構成において、XORの入力へ繋がるビットの設定
+vector<int> get_seq(int N)
+{
+    if (N == 4)
+        return { 1 << 1, 1 };
+    if (N == 8)
+        return { 1 << 2, 1 << 1 };
+    if (N == 16)
+        return { 1 << 3, 1 << 2 };
+    if (N == 32)
+        return { 1 << 4, 1 << 2 };
+    if (N == 64)
+        return { 1 << 5, 1 << 4 };
+    if (N == 128)
+        return { 1 << 6, 1 << 5 };
+    if (N == 256)
+        return { 1 << 7, 1 << 5, 1 << 4, 1 << 3 };
+    if (N == 512)
+        return { 1 << 8, 1 << 4 };
+    if (N == 1024)
+        return { 1 << 9, 1 << 6 };
+    if (N == 2048)
+        return { 1 << 10, 1 << 8 };
+    if (N == 4096)
+        return { 1 << 11, 1 << 10, 1 << 9, 1 << 3 };
+    if (N == 8192)
+        return { 1 << 12, 1 << 11, 1 << 10, 1 << 7 };
 
+    return {};
+}
+
+/*
+ * コンストラクタ
+ * 数値xを初期値seedのLFSRでSNに変換し、値などを変数に登録
+ * 複数のSNGでLFSRを共有する時のビットシフトに対応
+*/
 SN::SN(int x, int seed, int shift)
 {
+    // LFSRのためのmaskの設定
+    mask = Define::N - 1;
+
     bitset<N> input = SN::SNG(x, seed, shift);
     sn = input;
     nume = (double)x;
     deno = N;
     val = (double)input.count() / (double)N;
-
-    mask = Define::N - 1;
 } 
 
+/*
+ * 数値xを初期値seedのLFSRでSNに変換
+ * 上記の初期化の際に用いる
+ * 複数のSNGでLFSRを共有する時のビットシフトに対応
+*/
 bitset<SN::N> SN::SNG(int x, int seed, int shift)
 {
     bitset<N> sn;
@@ -25,32 +65,7 @@ bitset<SN::N> SN::SNG(int x, int seed, int shift)
     int shift_lfsr; // ビットシフト後の値
 
     // 最長LFSRの構成において、XORの入力へ繋がるビットの設定
-    vector<int> seq;
-
-    if (N == 4)
-        seq = { 1 << 1, 1 };
-    if (N == 8)
-        seq = { 1 << 2, 1 << 1 };
-    if (N == 16)
-        seq = { 1 << 3, 1 << 2 };
-    if (N == 32)
-        seq = { 1 << 4, 1 << 2 };
-    if (N == 64)
-        seq = { 1 << 5, 1 << 4 };
-    if (N == 128)
-        seq = { 1 << 6, 1 << 5 };
-    if (N == 256)
-        seq = { 1 << 7, 1 << 5, 1 << 4, 1 << 3 };
-    if (N == 512)
-        seq = { 1 << 8, 1 << 4 };
-    if (N == 1024)
-        seq = { 1 << 9, 1 << 6 };
-    if (N == 2048)
-        seq = { 1 << 10, 1 << 8 };
-    if (N == 4096)
-        seq = { 1 << 11, 1 << 10, 1 << 9, 1 << 3 };
-    if (N == 8192)
-        seq = { 1 << 12, 1 << 11, 1 << 10, 1 << 7 };
+    vector<int> seq = get_seq(N);
 
     set_shift(shift); // ビットシフト用の値の設定
 
@@ -74,12 +89,18 @@ bitset<SN::N> SN::SNG(int x, int seed, int shift)
     return sn;
 }
 
+/*
+ * ビットシフト用の値の設定
+*/
 void SN::set_shift(int shift)
 {
     shift1 = pow(2.0, shift) - 1;     shift2 = mask - shift1;
     shift3 = shift1 << (B - shift);  shift4 = mask - shift3;
 }
 
+/*
+ * LFSRから出力された乱数をビットシフトする
+*/
 int SN::bit_shift(int lfsr, int shift)
 {
     int lfsr1, lfsr2, shift_lfsr;
@@ -98,16 +119,25 @@ int SN::bit_shift(int lfsr, int shift)
     return shift_lfsr;
 }
 
+// 保持しているSNとその値を表示 
 void SN::print_bs()
 {
-    std::cout << sn << " = " << sn.count() << "/" << N << " = " << val << endl;
+    cout << sn << " = " << sn.count() << "/" << N << " = " << val << endl;
 }
 
+// SNを取得
 bitset<SN::N> SN::get_out()
 {
-    return this->sn;
+    return sn;
 }
 
+// SNの値を取得
+double SN::get_val()
+{
+    return val;
+}
+
+// 2つのSNの相関の強さを取得
 double SN::SCC(SN sn2)
 {
     bitset<N> input1 = sn;
