@@ -1,11 +1,13 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-#include <bits/stdc++.h>
+
+#include "SN.h"
+#include "Define.h"
 #include <random>
 #include <math.h>
 #include <fstream>
-//#include <algorithm>
 
 using namespace std;
+
 // 乱数を生成
 int RAND()
 {
