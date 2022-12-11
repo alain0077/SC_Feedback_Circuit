@@ -1,12 +1,15 @@
 #include "Define.h"
 #include <algorithm>
+#include <vector>
 #include <bitset>
 #include <cmath>
+#include <map>
 
 /*
   Stochastic Numberのクラス
 */
-class SN {
+class SN
+{
 private:
   const static int N = Define::N;     // SNのビット長:N
   const static int B = Define::B;     // LFSRのビット数:B
@@ -16,34 +19,38 @@ private:
   double nume;   // 本来の分子の値
   int deno;      // 分母の値
 
-  // ビットシフト用の値
-  int shift1;  int shift2;  int shift3;  int shift4;
-  int mask;
+  /// @brief 最長Garois LFSRの構成において、XORの入力へ繋がるビットの設定
+  /// @return XORの配置位置を示す配列
+  std::vector<int> get_seq_linear();
+
+  /// @brief 最長Nonliner LFSRの構成において、XORの入力へ繋がるビットの設定
+  /// @return XORの配置位置を示す配列
+  std::vector<int> get_seq_nonlinear();
+
+  /// @brief Garois LFSR（線形帰還シフトレジスタ）
+  /// @param x 目的の定数
+  /// @param seed 乱数生成器のseed
+  /// @return 準乱数列
+  std::vector<int> lfsr(int x, int seed);
+
+  /// @brief nonliner LFSR（非線形帰還シフトレジスタ）
+  /// @param x 目的の定数
+  /// @param seed 乱数生成器のseed
+  /// @return 準乱数列
+  std::vector<int> nonlinear_lfsr(int x, int seed);
 
 public:
-  /*
-    コンストラクタ
-    数値xを初期値seedのLFSRでSNに変換し、値などを変数に登録
-    複数のSNGでLFSRを共有する時のビットシフトに対応
-  */
-  SN(int x, int seed, int shift);
+  /// @brief コンストラクタ，数値xを初期値seedのLFSRまたは，nonliner LFSRベースのSNGでSNに変換し、値などを変数に登録
+  /// @param x 定数
+  /// @param seed 乱数生成器のseed
+  /// @param flag 0：LFSR，0以外：nonliner LFSR
+  SN(int x, int seed, int flag);
 
-  /*
-    数値xを初期値seedのLFSRでSNに変換
-    上記の初期化の際に用いる
-    複数のSNGでLFSRを共有する時のビットシフトに対応
-  */
-  std::bitset<N> SNG(int x, int seed, int shift);
-
-  /*
-    ビットシフト用の値の設定
-  */
-  void set_shift(int shift);
-
-  /*
-    LFSRから出力された乱数をビットシフトする
-  */
-  int bit_shift(int lfsr, int shift);
+  /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
+  /// @param x 定数
+  /// @param seed 乱数生成器のseed
+  /// @param flag 0：LFSR，0以外：nonliner LFSR
+  void SNG(int x, int seed, int flag);
 
   // 保持しているSNとその値を表示 
   void print_bs();
@@ -54,6 +61,8 @@ public:
   // SNの値を取得
   double get_val();
 
-  // 2つのSNの相関の強さを取得
+  /// @brief 2つのSNの相関の強さを取得
+  /// @param sn2 比較対象
+  
   double SCC(SN sn2);
 };

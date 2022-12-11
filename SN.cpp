@@ -1,122 +1,106 @@
 #include "SN.h"
-#include <vector>
 #include <iostream>
 
 using namespace std;
 
-// 最長LFSRの構成において、XORの入力へ繋がるビットの設定
-vector<int> get_seq(int N)
-{
-    if (N == 4)
-        return { 1 << 1, 1 };
-    if (N == 8)
-        return { 1 << 2, 1 << 1 };
-    if (N == 16)
-        return { 1 << 3, 1 << 2 };
-    if (N == 32)
-        return { 1 << 4, 1 << 2 };
-    if (N == 64)
-        return { 1 << 5, 1 << 4 };
-    if (N == 128)
-        return { 1 << 6, 1 << 5 };
-    if (N == 256)
-        return { 1 << 7, 1 << 5, 1 << 4, 1 << 3 };
-    if (N == 512)
-        return { 1 << 8, 1 << 4 };
-    if (N == 1024)
-        return { 1 << 9, 1 << 6 };
-    if (N == 2048)
-        return { 1 << 10, 1 << 8 };
-    if (N == 4096)
-        return { 1 << 11, 1 << 10, 1 << 9, 1 << 3 };
-    if (N == 8192)
-        return { 1 << 12, 1 << 11, 1 << 10, 1 << 7 };
-
-    return {};
-}
-
-/*
- * コンストラクタ
- * 数値xを初期値seedのLFSRでSNに変換し、値などを変数に登録
- * 複数のSNGでLFSRを共有する時のビットシフトに対応
-*/
-SN::SN(int x, int seed, int shift)
+/// @brief コンストラクタ，数値xを初期値seedのLFSRまたは，nonliner LFSRベースのSNGでSNに変換し、値などを変数に登録
+/// @param x 定数
+/// @param seed 乱数生成器のseed
+/// @param flag 0：LFSR，0以外：nonliner LFSR
+SN::SN(int x, int seed, int flag = 0)
 {
     // LFSRのためのmaskの設定
-    mask = Define::N - 1;
+    //mask = N - 1;
 
-    bitset<N> input = SN::SNG(x, seed, shift);
-    sn = input;
+    SNG(x, seed, flag);
     nume = (double)x;
     deno = N;
-    val = (double)input.count() / (double)N;
-} 
+    val = (double)sn.count() / (double)N;
+}
 
-/*
- * 数値xを初期値seedのLFSRでSNに変換
- * 上記の初期化の際に用いる
- * 複数のSNGでLFSRを共有する時のビットシフトに対応
-*/
-bitset<SN::N> SN::SNG(int x, int seed, int shift)
+/// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
+/// @param x 定数
+/// @param seed 乱数生成器のseed
+/// @param flag 0：LFSR，0以外：nonliner LFSR
+void SN::SNG(int x, int seed, int flag)
 {
-    bitset<N> sn;
-    int lfsr = seed;
-    int set0 = 1;
-    int shift_lfsr; // ビットシフト後の値
+    // LFSRまたは，nonliner LFSRより準乱数列を生成
+    vector<int> lds = flag? nonlinear_lfsr(x, seed) : lfsr(x, seed);
 
-    // 最長LFSRの構成において、XORの入力へ繋がるビットの設定
-    vector<int> seq = get_seq(N);
-
-    set_shift(shift); // ビットシフト用の値の設定
-
+    // Comparator
     for (int i = 0; i < N; i++) {
-        shift_lfsr = bit_shift(lfsr, shift);
-
-        if (x > shift_lfsr) {
-            sn.set(i);
-        }
-
-        bool t_bit = (lfsr & seq[0]) != 0;
-        for (int j = 1; j < seq.size(); j++) {
-            bool s_bit = (lfsr & seq[j]) != 0;
-            t_bit = t_bit ^ s_bit;
-        }
-        lfsr = lfsr << 1;
-        if (t_bit) {
-            lfsr = lfsr | 1;
-        }
+        // lfsrは1～N-1の範囲の値を出力するため，>=で比較
+        if (!flag && x >= lds[i]) sn.set(i);
+        // nonlinear lfsrは0～N-1の範囲の値を出力するため，>で比較
+        else if(flag && x > lds[i]) sn.set(i);
     }
-    return sn;
 }
 
-/*
- * ビットシフト用の値の設定
-*/
-void SN::set_shift(int shift)
+/// @brief Garois LFSR（線形帰還シフトレジスタ）
+/// @param x 目的の定数
+/// @param seed 乱数生成器のseed
+/// @return 準乱数列
+vector<int> SN::lfsr(int x, int seed)
 {
-    shift1 = pow(2.0, shift) - 1;     shift2 = mask - shift1;
-    shift3 = shift1 << (B - shift);  shift4 = mask - shift3;
+    // shift register
+    int sr = seed;
+    vector<int> list = get_seq_linear();
+
+    // return
+    vector<int> res;
+
+    for(int i = 0; i < N; i++) {
+        res.push_back(sr);
+
+        // 最下位ビットを抽出
+        int lsb = sr & 1;
+
+        // 1ビット右シフト
+        sr >>= 1;
+
+        // 上位にビットに最下位ビットを挿入
+        sr |= (lsb << (B - 1));
+
+        // 配置したxorについて演算する
+        for (auto l : list) sr ^= (lsb << l);
+    }
+
+    return res;
 }
 
-/*
- * LFSRから出力された乱数をビットシフトする
-*/
-int SN::bit_shift(int lfsr, int shift)
+/// @brief nonliner LFSR（非線形帰還シフトレジスタ）
+/// @param x 目的の定数
+/// @param seed 乱数生成器のseed
+/// @return 準乱数列
+vector<int> SN::nonlinear_lfsr(int x, int seed)
 {
-    int lfsr1, lfsr2, shift_lfsr;
-    lfsr = lfsr & mask;
+    // shift register
+    int sr = seed;
+    vector<int> list = get_seq_nonlinear();
 
-    if (shift == 0) {
-        shift_lfsr = lfsr;
-    }
-    else {
-        lfsr1 = lfsr & shift1;          lfsr2 = lfsr & shift2;
-        lfsr1 = lfsr1 << (B - shift);   lfsr2 = lfsr2 >> shift;
-        lfsr1 = lfsr1 & shift3;         lfsr2 = lfsr2 & shift4;
-        shift_lfsr = lfsr1 | lfsr2;
+    // return
+    vector<int> res;
+
+    for(int i = 0; i < N; i++) {
+        res.push_back(sr);
+
+        // 最下位ビット以外がゼロかどうかの判定
+        int nor = sr == 0 || sr == 1;
+
+        // フェードバック関数の結果を格納する変数
+        int b = nor;
+
+        // 配置したxorについて演算する
+        for(auto l : list) b ^= (sr >> l) & 1;
+
+        // 1ビット右シフト
+        sr >>= 1;
+        
+        // 上位にビットにフィードバック関数の結果を挿入
+        sr |= b << (B-1);
     }
 
-    return shift_lfsr;
+    return res;
 }
 
 // 保持しているSNとその値を表示 
@@ -166,4 +150,60 @@ double SN::SCC(SN sn2)
     }
 
     return scc;
+}
+
+/// @brief 最長Garois LFSRの構成において、XORの入力へ繋がるビットの設定
+/// @return XORの配置位置を示す配列
+vector<int> SN::get_seq_linear()
+{
+    if (B == 3)
+        return { 1 };
+    if (B == 4)
+        return { 2 };
+    if (B == 5)
+        return { 2 };
+    if (B == 6)
+        return { 4 };
+    if (B == 7)
+        return { 5 };
+    if (B == 8)
+        return { 5, 4, 3 };
+    if (B == 9)
+        return { 4 };
+    if (B == 10)
+        return { 6 };
+    if (B == 11)
+        return { 8 };
+    if (B == 12)
+        return { 10, 9, 3 };
+
+    return {};
+}
+
+/// @brief 最長Nonliner LFSRの構成において、XORの入力へ繋がるビットの設定
+/// @return XORの配置位置を示す配列
+vector<int> SN::get_seq_nonlinear()
+{
+    if (B == 3)
+        return { 2, 0 };
+    if (B == 4)
+        return { 3, 0 };
+    if (B == 5)
+        return { 3, 0 };
+    if (B == 6)
+        return { 5, 0 };
+    if (B == 7)
+        return { 6, 0 };
+    if (B == 8)
+        return { 6, 5, 4, 0 };
+    if (B == 9)
+        return { 5, 0 };
+    if (B == 10)
+        return { 7, 0 };
+    if (B == 11)
+        return { 9, 0 };
+    if (B == 12)
+        return { 11, 10, 4, 0 };
+
+    return {};
 }
