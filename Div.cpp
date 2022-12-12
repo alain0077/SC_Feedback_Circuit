@@ -1,7 +1,7 @@
 /*
 * Div
 */
-void div()
+void Div()
 {
     //演算結果を書き込むファイル
     FILE* fp = fopen("Method_Div.csv", "w");

@@ -63,6 +63,5 @@ public:
 
   /// @brief 2つのSNの相関の強さを取得
   /// @param sn2 比較対象
-  
   double SCC(SN sn2);
 };

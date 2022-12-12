@@ -1,7 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "SN.h"
-#include "Random.h"
 #include "Define.h"
 #include <random>
 #include <time.h>
@@ -15,37 +14,43 @@ using namespace std;
 
 int main()
 {
-    int N = 8;
-    const int B = 3;
+    int flag = 1;
+    int X = 4;
+    int N = 1;
+
+    double sum = 0.0;
+    double n_max = 0.0, n_min = 1.0;
+    int tmp1, tmp2;
 
     random_device rnd;
-    //mt19937 mt(rnd());
-    mt19937 mt((unsigned int)time(NULL));
-    uniform_int_distribution<> randN(1, N - 1);
-
-    unsigned int sr = randN(mt);
-
-    //cout << bitset<B>(lfsr) << endl;
-
-    vector<int> list = { 1 };
-
-    map<int, int> test;
+    mt19937 mt(rnd());
+    //mt19937 mt((unsigned int)time(NULL));
+    uniform_int_distribution<> randN(1, Define::N - 1);
 
     for(int i = 0; i < N; i++) {
-        cout << bitset<B>(sr) << endl;
+        int rn1 = randN(mt);
+        int rn2 = randN(mt);
 
-        // 最下位ビットを抽出
-        int lsb = sr & 1;
+        //cout << rn1 << ":" << rn2 << endl;
 
-        // 1ビット右シフト
-        sr >>= 1;
+        SN* sn1 = new SN(X,rn1,flag);
+        SN* sn2 = new SN(X,rn2,flag);
 
-        // 上位にビットに最下位ビットを挿入
-        sr |= (lsb << (B - 1));
+        auto scc = sn1->SCC(*sn2);
 
-        // 配置したxorについて演算する
-        for (auto l : list) sr ^= (lsb << l);
+        if(n_max < abs(scc)) tmp1 = rn1, tmp2 = rn2;
+
+        sum += abs(scc);
+        n_min = min(n_min, abs(scc));
+        n_max = max(n_max, abs(scc));
+
+        if(abs(scc) == double(1)) cout << rn1 << ":" << rn2 << endl;
     }
+
+    cout << sum / (double)N << endl;
+    cout << "min : " << n_min << endl;
+    cout << "max : " << n_max << endl;
+    cout << tmp1 << ":" << tmp2 << endl;
 
     return 0;
 }
