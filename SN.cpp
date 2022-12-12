@@ -7,7 +7,7 @@ using namespace std;
 /// @param x 定数
 /// @param seed 乱数生成器のseed
 /// @param flag 0：LFSR，0以外：nonliner LFSR
-SN::SN(int x, int seed, int flag = 0)
+SN::SN(int x, int seed, int flag)
 {
     // LFSRのためのmaskの設定
     //mask = N - 1;
@@ -44,6 +44,8 @@ vector<int> SN::lfsr(int x, int seed)
 {
     // shift register
     int sr = seed;
+
+    // XORの位置情報について取得
     vector<int> list = get_seq_linear();
 
     // return
@@ -76,6 +78,8 @@ vector<int> SN::nonlinear_lfsr(int x, int seed)
 {
     // shift register
     int sr = seed;
+
+    // XORの位置情報について取得
     vector<int> list = get_seq_nonlinear();
 
     // return

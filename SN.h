@@ -44,7 +44,7 @@ public:
   /// @param x 定数
   /// @param seed 乱数生成器のseed
   /// @param flag 0：LFSR，0以外：nonliner LFSR
-  SN(int x, int seed, int flag);
+  SN(int x, int seed, int flag = 0);
 
   /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
   /// @param x 定数
