@@ -9,13 +9,17 @@ using namespace std;
 /// @param flag 0：LFSR，0以外：nonliner LFSR
 SN::SN(int x, int seed, int flag)
 {
-    // LFSRのためのmaskの設定
-    //mask = N - 1;
-
     SNG(x, seed, flag);
-    nume = (double)x;
-    deno = N;
-    val = (double)sn.count() / (double)N;
+    _nume = (double)x;
+    _val = (double)_sn.count() / (double)N;
+}
+
+/// @brief コンストラクタ，指定したビット列のSNを生成．
+/// @param sn SNのビット列
+/// @param val SNの値
+/// @param _nume 本来の分子の値
+SN::SN(std::bitset<N> sn, double val, double nume) : _sn(sn), _val(val), _nume(nume)
+{
 }
 
 /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
@@ -30,9 +34,9 @@ void SN::SNG(int x, int seed, int flag)
     // Comparator
     for (int i = 0; i < N; i++) {
         // lfsrは1～N-1の範囲の値を出力するため，>=で比較
-        if (!flag && x >= lds[i]) sn.set(i);
+        if (!flag && x >= lds[i]) _sn.set(i);
         // nonlinear lfsrは0～N-1の範囲の値を出力するため，>で比較
-        else if(flag && x > lds[i]) sn.set(i);
+        else if(flag && x > lds[i]) _sn.set(i);
     }
 }
 
@@ -110,26 +114,26 @@ vector<int> SN::nonlinear_lfsr(int x, int seed)
 // 保持しているSNとその値を表示 
 void SN::print_bs()
 {
-    cout << sn << " = " << sn.count() << "/" << N << " = " << val << endl;
+    cout << _sn << " = " << _sn.count() << "/" << N << " = " << _val << endl;
 }
 
 // SNを取得
 bitset<SN::N> SN::get_out()
 {
-    return sn;
+    return _sn;
 }
 
 // SNの値を取得
 double SN::get_val()
 {
-    return val;
+    return _val;
 }
 
 // 2つのSNの相関の強さを取得
 double SN::SCC(SN sn2)
 {
-    bitset<N> input1 = sn;
-    bitset<N> input2 = sn2.sn;
+    bitset<N> input1 = _sn;
+    bitset<N> input2 = sn2._sn;
     bitset<N> sn3 = input1 & input2;
 
     double p12 = (double)sn3.count() / (double)N;
@@ -154,6 +158,11 @@ double SN::SCC(SN sn2)
     }
 
     return scc;
+}
+
+void SN::Regeneration(int seed, int flag)
+{
+    SNG();
 }
 
 /// @brief 最長Garois LFSRの構成において、XORの入力へ繋がるビットの設定

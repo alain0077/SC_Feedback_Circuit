@@ -6,5 +6,5 @@ class AbstractModule
 public:
     AbstractModule() {};
     ~AbstractModule() {};
-    virtual void update();
+    virtual bool next(std::vector<bool> inputs);
 };

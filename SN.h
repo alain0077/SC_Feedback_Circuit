@@ -14,10 +14,9 @@ private:
   const static int N = Define::N;     // SNのビット長:N
   const static int B = Define::B;     // LFSRのビット数:B
 
-  std::bitset<N> sn;  // SNのビット列
-  double val;    // SNの値
-  double nume;   // 本来の分子の値
-  int deno;      // 分母の値
+  std::bitset<N> _sn;  // SNのビット列
+  double _val;    // SNの値
+  double _nume;   // 本来の分子の値
 
   /// @brief 最長Garois LFSRの構成において、XORの入力へ繋がるビットの設定
   /// @return XORの配置位置を示す配列
@@ -46,6 +45,12 @@ public:
   /// @param flag 0：LFSR，0以外：nonliner LFSR
   SN(int x, int seed, int flag = 0);
 
+  /// @brief コンストラクタ，指定したビット列のSNを生成
+  /// @param sn SNのビット列
+  /// @param val SNの値
+  /// @param _nume 本来の分子の値
+  SN(std::bitset<N> sn, double val, double _nume);
+
   /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
   /// @param x 定数
   /// @param seed 乱数生成器のseed
@@ -64,4 +69,9 @@ public:
   /// @brief 2つのSNの相関の強さを取得
   /// @param sn2 比較対象
   double SCC(SN sn2);
+
+  /// @brief SNを再生成する．
+  /// @param seed 乱数生成器のseed
+  /// @param flag 0：LFSR，0以外：nonliner LFSR
+  void Regeneration(int seed, int flag = 0);
 };
