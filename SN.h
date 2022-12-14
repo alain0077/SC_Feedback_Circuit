@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Define.h"
 #include <algorithm>
 #include <vector>
@@ -57,6 +59,11 @@ public:
   /// @param flag 0：LFSR，0以外：nonliner LFSR
   void SNG(int x, int seed, int flag);
 
+  /// @brief SNを再生成する．
+  /// @param seed 乱数生成器のseed
+  /// @param flag 0：LFSR，0以外：nonliner LFSR
+  SN Regeneration(int seed, int flag = 0);
+
   // 保持しているSNとその値を表示 
   void print_bs();
 
@@ -69,9 +76,4 @@ public:
   /// @brief 2つのSNの相関の強さを取得
   /// @param sn2 比較対象
   double SCC(SN sn2);
-
-  /// @brief SNを再生成する．
-  /// @param seed 乱数生成器のseed
-  /// @param flag 0：LFSR，0以外：nonliner LFSR
-  void Regeneration(int seed, int flag = 0);
 };

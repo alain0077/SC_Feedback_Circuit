@@ -40,6 +40,27 @@ void SN::SNG(int x, int seed, int flag)
     }
 }
 
+SN SN::Regeneration(int seed, int flag)
+{
+    // Counter
+    auto x = _sn.count();
+
+    bitset<N> sn;
+
+    // LFSRまたは，nonliner LFSRより準乱数列を生成
+    vector<int> lds = flag? nonlinear_lfsr(x, seed) : lfsr(x, seed);
+
+    // Comparator
+    for (int i = 0; i < N; i++) {
+        // lfsrは1～N-1の範囲の値を出力するため，>=で比較
+        if (!flag && x >= lds[i]) sn.set(i);
+        // nonlinear lfsrは0～N-1の範囲の値を出力するため，>で比較
+        else if(flag && x > lds[i]) sn.set(i);
+    }
+
+    return SN(sn, (double)sn.count()/(double)N, _nume);
+}
+
 /// @brief Garois LFSR（線形帰還シフトレジスタ）
 /// @param x 目的の定数
 /// @param seed 乱数生成器のseed
@@ -158,11 +179,6 @@ double SN::SCC(SN sn2)
     }
 
     return scc;
-}
-
-void SN::Regeneration(int seed, int flag)
-{
-    SNG();
 }
 
 /// @brief 最長Garois LFSRの構成において、XORの入力へ繋がるビットの設定

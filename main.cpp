@@ -27,30 +27,18 @@ int main()
     //mt19937 mt((unsigned int)time(NULL));
     uniform_int_distribution<> randN(1, Define::N - 1);
 
-    for(int i = 0; i < N; i++) {
-        int rn1 = randN(mt);
-        int rn2 = randN(mt);
+    int rn1 = randN(mt);
 
-        //cout << rn1 << ":" << rn2 << endl;
+    SN sn1 = SN(X, rn1, flag);
+    SN sn2 = SN(X, rn1, flag);
 
-        SN* sn1 = new SN(X,rn1,flag);
-        SN* sn2 = new SN(X,rn2,flag);
+    cout << sn1.SCC(sn2) << endl;
 
-        auto scc = sn1->SCC(*sn2);
+    int rn2 = randN(mt);
 
-        if(n_max < abs(scc)) tmp1 = rn1, tmp2 = rn2;
+    SN sn3 = sn1.Regeneration(rn2, flag);
 
-        sum += abs(scc);
-        n_min = min(n_min, abs(scc));
-        n_max = max(n_max, abs(scc));
-
-        if(abs(scc) == double(1)) cout << rn1 << ":" << rn2 << endl;
-    }
-
-    cout << sum / (double)N << endl;
-    cout << "min : " << n_min << endl;
-    cout << "max : " << n_max << endl;
-    cout << tmp1 << ":" << tmp2 << endl;
+    cout << sn1.SCC(sn3) << endl;
 
     return 0;
 }
