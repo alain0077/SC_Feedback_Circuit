@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Define.h"
-#include <algorithm>
 #include <vector>
 #include <bitset>
 #include <cmath>
-#include <map>
 
 /*
   Stochastic Numberのクラス
@@ -68,10 +66,13 @@ public:
   void print_bs();
 
   // SNを取得
-  std::bitset<N> get_out();
+  std::bitset<N> get_out() { return _sn; };
 
   // SNの値を取得
-  double get_val();
+  double get_val() { return _val; };
+
+  // SNの本来の分子の値を取得
+  double get_nume() { return _nume; };
 
   /// @brief 2つのSNの相関の強さを取得
   /// @param sn2 比較対象

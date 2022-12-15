@@ -45,6 +45,7 @@ SN SN::Regeneration(int seed, int flag)
     // Counter
     auto x = _sn.count();
 
+    // 再生したSN
     bitset<N> sn;
 
     // LFSRまたは，nonliner LFSRより準乱数列を生成
@@ -136,18 +137,6 @@ vector<int> SN::nonlinear_lfsr(int x, int seed)
 void SN::print_bs()
 {
     cout << _sn << " = " << _sn.count() << "/" << N << " = " << _val << endl;
-}
-
-// SNを取得
-bitset<SN::N> SN::get_out()
-{
-    return _sn;
-}
-
-// SNの値を取得
-double SN::get_val()
-{
-    return _val;
 }
 
 // 2つのSNの相関の強さを取得
