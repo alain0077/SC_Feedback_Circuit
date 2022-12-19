@@ -1,4 +1,4 @@
-#include <cmath>
+#pragma once
 
 // holds the error
 class AbsError
@@ -9,6 +9,18 @@ private:
 
     // Sum of Absolute Percentage Error
     double _per_err;
+
+    // Miximum value of Absolute Error
+    double _max_abs_err;
+
+    // Miximum value of Absolute Percentage Error
+    double _max_per_err;
+
+    // Minimum value of Absolute Error
+    double _min_abs_err;
+
+    // Minimum value of Absolute Percentage Error
+    double _min_per_err;
 
     // Trials
     unsigned int _time;
@@ -33,5 +45,24 @@ public:
 
     /// @brief Return Mean Absolute Percentage Error (MAPE)
     /// @return MAPE
-    double get_RAE() { return _per_err/double(_time); };
+    double get_MAPE() { return _per_err/double(_time); };
+
+    /// @brief Return Maximum Absolute Error
+    /// @return Max AE
+    double get_MAX_AE() {return _max_abs_err; };
+
+    /// @brief Return Maximum Absolute Percentage Error
+    /// @return Max APE
+    double get_MAX_APE() {return _max_per_err; };
+
+    /// @brief Return Minimum Absolute Error
+    /// @return Min AE
+    double get_MIN_AE() {return _min_abs_err; };
+
+    /// @brief Return Minimum Absolute Percentage Error
+    /// @return Min APE
+    double get_MIN_APE() {return _min_per_err; };
+
+    /// @brief Print All Parameters
+    void  print_Summary() const;
 };

@@ -2,13 +2,14 @@
 
 #include "SN.h"
 #include "AbsError.h"
+#include "Analysis.h"
 
 /// @brief SC演算をまとめたnamespace
 namespace SC
 {
     namespace Divison
     {
-        class CORDIV : public AbsError
+        class CORDIV : public Analysis
         {
         public:
             CORDIV();
@@ -17,13 +18,25 @@ namespace SC
             SN operator() (SN divisor, SN dividend);
         };
 
-        class Feedback : public AbsError
+        class Feedback : public Analysis
         {
         public:
             Feedback();
             virtual ~Feedback() = default;
 
             SN operator() (SN divisor, SN dividend);
+        };
+    }
+
+    namespace Multiplication
+    {
+        class AND : public Analysis
+        {
+        public:
+            AND();
+            virtual ~AND() = default;
+
+            SN operator() (SN multiplier, SN multiplicand);
         };
     }
 }

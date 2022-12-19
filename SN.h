@@ -46,10 +46,10 @@ public:
   SN(int x, int seed);
 
   /// @brief コンストラクタ，指定したビット列のSNを生成
-  /// @param sn SNのビット列
+  /// @param ans 本来の値
   /// @param val SNの値
-  /// @param ans 本来の分子の値
-  SN(std::bitset<N> sn, double val, double ans);
+  /// @param sn SNのビット列
+  SN(double ans, double val, std::bitset<N> sn);
 
   /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
   /// @param x 定数
@@ -64,7 +64,7 @@ public:
   void print_bs();
 
   // SNを取得
-  std::bitset<N> get_out() { return _sn; };
+  std::bitset<N> get_sn() { return _sn; };
 
   // SNの値を取得
   double get_val() { return _val; };

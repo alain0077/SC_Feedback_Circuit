@@ -14,10 +14,10 @@ SN::SN(int x, int seed)
 }
 
 /// @brief コンストラクタ，指定したビット列のSNを生成．
-/// @param sn SNのビット列
+/// @param ans 本来の値
 /// @param val SNの値
-/// @param ans 本来の分子の値
-SN::SN(std::bitset<N> sn, double val, double ans) : _sn(sn), _val(val), _ans(ans)
+/// @param sn SNのビット列
+SN::SN(double ans, double val, std::bitset<N> sn) : _ans(ans), _val(val), _sn(sn)
 {
 }
 
@@ -57,7 +57,7 @@ SN SN::regeneration(int seed)
         else if(flag && x > lds[i]) sn.set(i);
     }
 
-    return SN(sn, (double)sn.count()/(double)N, _ans);
+    return SN(_ans, (double)sn.count()/(double)N, sn);
 }
 
 /// @brief Garois LFSR（線形帰還シフトレジスタ）

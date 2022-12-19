@@ -6,7 +6,7 @@ using namespace SC::Divison;
 /*
  * Division
 */
-CORDIV::CORDIV() : AbsError()
+CORDIV::CORDIV() : Analysis()
 {
 }
 
@@ -27,7 +27,7 @@ SN CORDIV::operator() (SN divisor, SN dividend)
 
     for (int i = 0; i < N; i++) {
         
-        mux[i] = divisor.get_out()[i]? dividend.get_out()[i] : d;
+        mux[i] = divisor.get_sn()[i]? dividend.get_sn()[i] : d;
 
         d = mux[i];
     }
@@ -38,13 +38,16 @@ SN CORDIV::operator() (SN divisor, SN dividend)
     // 出力SNの値を計算
     double val = (double)mux.count()/(double)Define::N;
 
-    Update_Error(ans, val);
+    // SCC
+    double scc = divisor.SCC(dividend);
 
-    return SN(mux, val, ans);
+    Update_Analysis(ans, val, scc);
+
+    return SN(ans, val, mux);
 }
 
 
-Feedback::Feedback() : AbsError()
+Feedback::Feedback() : Analysis()
 {
 }
 
@@ -59,9 +62,9 @@ SN Feedback::operator() (SN divisor, SN dividend)
     
     //Accumlaterの初期化
     int sum1 = 0, sum2 = 0;
-
+    
     for (int i = 0; i < Define::N; i++) {
-        sum1 += dividend.get_out()[i] + block;
+        sum1 += dividend.get_sn()[i] + block;
 
         if (sum1 > sum2) {
             nsadd[i] = 1;
@@ -69,7 +72,7 @@ SN Feedback::operator() (SN divisor, SN dividend)
         }
         else nsadd[i] = 0;
         
-        block = nsadd[i] && (!divisor.get_out()[i]);
+        block = nsadd[i] && (!divisor.get_sn()[i]);
     }
 
     // 本来の値を計算
@@ -78,8 +81,11 @@ SN Feedback::operator() (SN divisor, SN dividend)
     // 出力SNの値を計算
     double val = (double)nsadd.count()/(double)Define::N;
 
+    // SCC
+    double scc = divisor.SCC(dividend);
 
-    Update_Error(ans, val);
+    // Errorクラスの値を更新
+    Update_Analysis(ans, val, scc);
 
-    return SN(nsadd, val, ans);
+    return SN(ans, val, nsadd);
 }
