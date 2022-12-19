@@ -1,44 +1,48 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+﻿//#define _CRT_SECURE_NO_WARNINGS
 
+#include "SC.h"
 #include "SN.h"
 #include "Define.h"
-#include <random>
+#include "Random.h"
 #include <time.h>
-#include <vector>
 #include <fstream>
 #include <iostream>
 
-#include <map>
-
 using namespace std;
+using namespace SC::Divison;
 
 int main()
 {
-    int flag = 1;
-    int X = 4;
-    int N = 1;
+    clock_t start = clock();    // スタート時間
 
-    double sum = 0.0;
-    double n_max = 0.0, n_min = 1.0;
-    int tmp1, tmp2;
+    auto randN = Random();
 
-    random_device rnd;
-    mt19937 mt(rnd());
-    //mt19937 mt((unsigned int)time(NULL));
-    uniform_int_distribution<> randN(1, Define::N - 1);
+    auto divion1 = Feedback();
+    auto divion2 = CORDIV();
 
-    int rn1 = randN(mt);
+    for(int t = 0; t < 10; t++) {
+        //randN.seed((unsigned int)time(NULL));
 
-    SN sn1 = SN(X, rn1, flag);
-    SN sn2 = SN(X, rn1, flag);
+        int rn1 = randN();
+        int rn2 = randN();
 
-    cout << sn1.SCC(sn2) << endl;
+        for (int i = 2; i < Define::N; i++) {
+            //cout << i << endl;
+            for (int j = 1; j < i; j++) {
+                SN sn1 = SN(i, rn1);
+                SN sn2 = SN(j, rn2);
 
-    int rn2 = randN(mt);
+                divion1(sn1, sn2);
+                divion2(sn1, sn2);
+            }
+        }
 
-    SN sn3 = sn1.Regeneration(rn2, flag);
+        cout << divion1.get_RAE() << endl;
+        cout << divion2.get_RAE() << endl;
+    }
 
-    cout << sn1.SCC(sn3) << endl;
+    clock_t end = clock();     // 終了時間
+    cout << (double)(end - start) / CLOCKS_PER_SEC << endl;
 
     return 0;
 }

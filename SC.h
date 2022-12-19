@@ -8,16 +8,22 @@ namespace SC
 {
     namespace Divison
     {
+        class CORDIV : public AbsError
+        {
+        public:
+            CORDIV();
+            virtual ~CORDIV() = default;
+
+            SN operator() (SN divisor, SN dividend);
+        };
+
         class Feedback : public AbsError
         {
-        private:
-            SN _output;
-
         public:
             Feedback();
             virtual ~Feedback() = default;
 
-            SN  Div(SN divisor, SN dividend);
+            SN operator() (SN divisor, SN dividend);
         };
     }
 }

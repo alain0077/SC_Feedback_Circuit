@@ -6,27 +6,25 @@ using namespace std;
 /// @brief コンストラクタ，数値xを初期値seedのLFSRまたは，nonliner LFSRベースのSNGでSNに変換し、値などを変数に登録
 /// @param x 定数
 /// @param seed 乱数生成器のseed
-/// @param flag 0：LFSR，0以外：nonliner LFSR
-SN::SN(int x, int seed, int flag)
+SN::SN(int x, int seed)
 {
-    SNG(x, seed, flag);
-    _nume = (double)x;
+    SNG(x, seed);
+    _ans = (double)x  / (double)N;
     _val = (double)_sn.count() / (double)N;
 }
 
 /// @brief コンストラクタ，指定したビット列のSNを生成．
 /// @param sn SNのビット列
 /// @param val SNの値
-/// @param _nume 本来の分子の値
-SN::SN(std::bitset<N> sn, double val, double nume) : _sn(sn), _val(val), _nume(nume)
+/// @param ans 本来の分子の値
+SN::SN(std::bitset<N> sn, double val, double ans) : _sn(sn), _val(val), _ans(ans)
 {
 }
 
 /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
 /// @param x 定数
 /// @param seed 乱数生成器のseed
-/// @param flag 0：LFSR，0以外：nonliner LFSR
-void SN::SNG(int x, int seed, int flag)
+void SN::SNG(int x, int seed)
 {
     // LFSRまたは，nonliner LFSRより準乱数列を生成
     vector<int> lds = flag? nonlinear_lfsr(x, seed) : lfsr(x, seed);
@@ -40,7 +38,7 @@ void SN::SNG(int x, int seed, int flag)
     }
 }
 
-SN SN::Regeneration(int seed, int flag)
+SN SN::regeneration(int seed)
 {
     // Counter
     auto x = _sn.count();
@@ -59,7 +57,7 @@ SN SN::Regeneration(int seed, int flag)
         else if(flag && x > lds[i]) sn.set(i);
     }
 
-    return SN(sn, (double)sn.count()/(double)N, _nume);
+    return SN(sn, (double)sn.count()/(double)N, _ans);
 }
 
 /// @brief Garois LFSR（線形帰還シフトレジスタ）
