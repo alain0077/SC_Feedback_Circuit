@@ -27,7 +27,7 @@ namespace SC
             SN operator() (SN divisor, SN dividend);
         };
     }
-
+    
     namespace Multiplication
     {
         class AND : public Analysis

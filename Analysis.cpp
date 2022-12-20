@@ -1,5 +1,5 @@
 #include "Analysis.h"
-#include <algorithm>
+#include <cmath>
 #include <iostream>
 
 using namespace std;
@@ -31,7 +31,7 @@ void Analysis::Update_Analysis(double ans, double val, double scc)
     auto p = make_pair(scc, ans - val);
     _max_scc = _max_scc.first > scc ? _max_scc : p;
     _min_scc = _min_scc.first < scc ? _min_scc : p;
-    _scc = _scc.first < abs(scc) ? _scc : p;
+    _scc = abs(_scc.first) < abs(scc) ? _scc : p;
 }
 
 /// @brief Print All Parameters
@@ -41,16 +41,16 @@ void Analysis::print_Summary() const
 
     cout << "\n";
 
-    cout << "-------------------" << "\n";
-    cout << "|    About SCC    |" << "\n";
-    cout << "-------------------" << "\n";
-    cout << "-- Maximum --" << "\n";
+    cout << "-----------------------------------" << "\n";
+    cout << "|            About SCC            |" << "\n";
+    cout << "-----------------------------------" << "\n";
+    cout << "------------- Maximum -------------" << "\n";
     cout << "SCC : " << _max_scc.first << "\n";
     cout << "Err : " << _max_scc.second << "\n";
-    cout << "-- Minimum --" << "\n";
+    cout << "------------- Minimum -------------" << "\n";
     cout << "SCC : " << _min_scc.first << "\n";
     cout << "Err : " << _min_scc.second << "\n";
-    cout << "-- Closest to 0 --" << "\n";
+    cout << "--------- Closest to zero ---------" << "\n";
     cout << "SCC : " << _scc.first << "\n";
     cout << "Err : " << _scc.second << "\n";
 }

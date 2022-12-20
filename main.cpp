@@ -20,8 +20,6 @@ int main()
     auto divion1 = Feedback();
     auto divion2 = CORDIV();
 
-    auto mult = SC::Multiplication::AND();
-
     for(int t = 0; t < 1; t++) {
         //randN.seed((unsigned int)time(NULL));
 
@@ -39,9 +37,14 @@ int main()
             }
         }
 
-        cout << divion1.get_MAPE() << endl;
-        cout << divion2.get_MAPE() << endl;
+        //cout << divion1.get_MAPE() << endl;
+        //cout << divion2.get_MAPE() << endl;
     }
+
+    cout << "Feedback" << endl;
+    divion1.print_Summary();
+    cout << "CORDIV" << endl;
+    divion2.print_Summary();
 
     clock_t end = clock();     // 終了時間
     cout << (double)(end - start) / CLOCKS_PER_SEC << endl;
