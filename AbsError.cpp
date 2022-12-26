@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cfloat>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -20,14 +21,14 @@ void AbsError::Update_Error(double ans, double val)
     _time++;
 
     // Absolute Error
-    double err = abs(ans - val);
+    double err = std::abs(ans - val);
 
     // Absolute Percentage Error
     double per = err / ans;
 
-    // 
-    _max_abs = _max_abs > per ? _max_abs : per;
-    _min_abs = _min_abs < per ? _min_abs : per;
+    // Compair and Update
+    _max_abs = _max_abs > err ? _max_abs : err;
+    _min_abs = _min_abs < err ? _min_abs : err;
     _max_per = _max_per > per ? _max_per : per;
     _min_per = _min_per < per ? _min_per : per;
 
@@ -59,10 +60,10 @@ void AbsError::print_Summary() const
     cout << " Trials : " << _time << "\n";
     cout << "------- Absolute Error (AE) -------" << "\n";
     cout << "    MAE : " << _sum_err/double(_time) << "\n";
-    cout << " MAX AE : " << _max_abs << "\n";
-    cout << " MIN AE : " << _min_abs << "\n";
+    cout << " MAX AE : " << setprecision(8) << ((_max_abs > DBL_EPSILON) ? _max_abs : 0.0) << "\n";
+    cout << " MIN AE : " << setprecision(8) << ((_min_abs > DBL_EPSILON) ? _min_abs : 0.0) << "\n";
     cout << "- Absolute Percentage Error (APE) -" << "\n";
     cout << "   MAPE : " << _per_err/double(_time) << "\n";
-    cout << "MAX APE : " << _max_per << "\n";
-    cout << "MIN APE : " << _min_per << "\n";
+    cout << "MAX APE : " << setprecision(8) << ((_max_per > DBL_EPSILON) ? _max_per : 0.0) << "\n";
+    cout << "MIN APE : " << setprecision(8) << ((_min_per > DBL_EPSILON) ? _min_per : 0.0) << "\n";
 }

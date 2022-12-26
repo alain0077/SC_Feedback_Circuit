@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AbsError.h"
+#include "SN.h"
 #include <string>
 #include <vector>
 
@@ -23,6 +24,8 @@ protected:
     /// @param val The value of output SN
     /// @param scc SCC of inputs SN
     void Update_Analysis(double ans, double val, double scc);
+
+    //void Update_Analysis(double ans, double val, SN input1, SN input2);
 
 public:
     /// @brief Constractor

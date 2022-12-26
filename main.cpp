@@ -27,7 +27,6 @@ int main()
         int rn2 = randN();
 
         for (int i = 2; i < Define::N; i++) {
-            //cout << i << endl;
             for (int j = 1; j < i; j++) {
                 SN sn1 = SN(i, rn1);
                 SN sn2 = SN(j, rn2);
@@ -40,7 +39,7 @@ int main()
         //cout << divion1.get_MAPE() << endl;
         //cout << divion2.get_MAPE() << endl;
     }
-
+    
     cout << "Feedback" << endl;
     divion1.print_Summary();
     cout << "CORDIV" << endl;

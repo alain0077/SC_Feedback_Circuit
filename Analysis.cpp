@@ -1,6 +1,8 @@
 #include "Analysis.h"
 #include <cmath>
+#include <cfloat>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -31,7 +33,7 @@ void Analysis::Update_Analysis(double ans, double val, double scc)
     auto p = make_pair(scc, ans - val);
     _max_scc = _max_scc.first > scc ? _max_scc : p;
     _min_scc = _min_scc.first < scc ? _min_scc : p;
-    _scc = abs(_scc.first) < abs(scc) ? _scc : p;
+    _scc = std::abs(_scc.first) < std::abs(scc) ? _scc : p;
 }
 
 /// @brief Print All Parameters
@@ -46,11 +48,11 @@ void Analysis::print_Summary() const
     cout << "-----------------------------------" << "\n";
     cout << "------------- Maximum -------------" << "\n";
     cout << "SCC : " << _max_scc.first << "\n";
-    cout << "Err : " << _max_scc.second << "\n";
+    cout << "Err : " << setprecision(8) << ((std::abs(_max_scc.second) > DBL_EPSILON) ? _max_scc.second : 0.0) << "\n";
     cout << "------------- Minimum -------------" << "\n";
     cout << "SCC : " << _min_scc.first << "\n";
-    cout << "Err : " << _min_scc.second << "\n";
+    cout << "Err : " << setprecision(8) << ((std::abs(_min_scc.second) > DBL_EPSILON) ? _min_scc.second : 0.0) << "\n";
     cout << "--------- Closest to zero ---------" << "\n";
     cout << "SCC : " << _scc.first << "\n";
-    cout << "Err : " << _scc.second << "\n";
+    cout << "Err : " << setprecision(8) << ((std::abs(_scc.second) > DBL_EPSILON) ? _scc.second : 0.0) << "\n";
 }
