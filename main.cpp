@@ -15,7 +15,7 @@ int main()
 {
     clock_t start = clock();    // スタート時間
 
-    auto randN = Random();
+    //auto randN = Random();
 
     auto divion1 = Feedback();
     auto divion2 = CORDIV();
@@ -23,16 +23,18 @@ int main()
     for(int t = 0; t < 1; t++) {
         //randN.seed((unsigned int)time(NULL));
 
-        int rn1 = randN();
-        int rn2 = randN();
+        int rn1 = Random()();
+        int rn2 = Random()();
 
         for (int i = 2; i < Define::N; i++) {
+            SN sn1 = SN(i, rn1, 2);
+
             for (int j = 1; j < i; j++) {
-                SN sn1 = SN(i, rn1);
-                SN sn2 = SN(j, rn2);
+                SN sn2 = SN(j, rn2, 0);
+                SN sn3 = SN(j, rn1, 2);
 
                 divion1(sn1, sn2);
-                divion2(sn1, sn2);
+                divion2(sn1, sn3);
             }
         }
 

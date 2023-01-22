@@ -40,10 +40,16 @@ private:
   std::vector<int> nonlinear_lfsr(int x, int seed);
 
 public:
-  /// @brief コンストラクタ，数値xを初期値seedのLFSRまたは，nonliner LFSRベースのSNGでSNに変換し、値などを変数に登録
+  /// @brief コンストラクタ，数値xを初期値seedのLFSRまたは，nonliner LFSRベースのSNGでSNに変換し，値などを変数に登録
   /// @param x 定数
   /// @param seed 乱数生成器のseed
   SN(int x, int seed);
+
+  /// @brief コンストラクタ，数値xを初期値seedのLFSRまたは，nonliner LFSRベースのSNGでSNに変換し，値などを変数に登録，複数のSNGでLFSRを共有する時のビットシフトに対応
+  /// @param x 定数
+  /// @param seed 乱数生成器のseed
+  /// @param shift ビットシフトするビット長
+  SN(int x, int seed, int shift);
 
   /// @brief コンストラクタ，指定したビット列のSNを生成
   /// @param ans 本来の値
@@ -55,6 +61,12 @@ public:
   /// @param x 定数
   /// @param seed 乱数生成器のseed
   void SNG(int x, int seed);
+
+  /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換，複数のSNGでLFSRを共有する時のビットシフトに対応
+  /// @param x 定数
+  /// @param seed 乱数生成器のseed
+  /// @param shift ビットシフトするビット長
+  void SNG(int x, int seed, int shift);
 
   /// @brief SNを再生成する．
   /// @param seed 乱数生成器のseed

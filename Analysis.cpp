@@ -7,7 +7,7 @@
 using namespace std;
 
 /// @brief Constractor
-Analysis::Analysis() : AbsError(), _max_scc({0.0, 0.0}), _min_scc({-1.0, 0.0}), _scc({1.1, 0.0})
+Analysis::Analysis() : AbsError(), _max_scc({-1.1, 0.0}), _min_scc({1.1, 0.0}), _scc({1.1, 0.0})
 {
 }
 
@@ -32,8 +32,11 @@ void Analysis::Update_Analysis(double ans, double val, double scc)
     // Compair and Update
     auto p = make_pair(scc, ans - val);
     _max_scc = _max_scc.first > scc ? _max_scc : p;
+    if(std::abs(_max_scc.first - p.first) < DBL_EPSILON) _max_scc = std::abs(_max_scc.second) > std::abs(p.second) ? _max_scc : p;
     _min_scc = _min_scc.first < scc ? _min_scc : p;
+    if(std::abs(_min_scc.first - p.first) < DBL_EPSILON) _min_scc = std::abs(_min_scc.second) > std::abs(p.second) ? _min_scc : p;
     _scc = std::abs(_scc.first) < std::abs(scc) ? _scc : p;
+    if(std::abs(_scc.first) - std::abs(p.first) < DBL_EPSILON) _scc = std::abs(_scc.second) > std::abs(p.second) ? _scc : p;
 }
 
 /// @brief Print All Parameters
@@ -48,11 +51,11 @@ void Analysis::print_Summary() const
     cout << "-----------------------------------" << "\n";
     cout << "------------- Maximum -------------" << "\n";
     cout << "SCC : " << _max_scc.first << "\n";
-    cout << "Err : " << setprecision(8) << ((std::abs(_max_scc.second) > DBL_EPSILON) ? _max_scc.second : 0.0) << "\n";
+    cout << "Err : " << ((std::abs(_max_scc.second) > DBL_EPSILON) ? _max_scc.second : 0.0) << "\n";
     cout << "------------- Minimum -------------" << "\n";
     cout << "SCC : " << _min_scc.first << "\n";
-    cout << "Err : " << setprecision(8) << ((std::abs(_min_scc.second) > DBL_EPSILON) ? _min_scc.second : 0.0) << "\n";
+    cout << "Err : " << ((std::abs(_min_scc.second) > DBL_EPSILON) ? _min_scc.second : 0.0) << "\n";
     cout << "--------- Closest to zero ---------" << "\n";
     cout << "SCC : " << _scc.first << "\n";
-    cout << "Err : " << setprecision(8) << ((std::abs(_scc.second) > DBL_EPSILON) ? _scc.second : 0.0) << "\n";
+    cout << "Err : " << ((std::abs(_scc.second) > DBL_EPSILON) ? _scc.second : 0.0) << "\n";
 }

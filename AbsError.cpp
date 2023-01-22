@@ -60,10 +60,10 @@ void AbsError::print_Summary() const
     cout << " Trials : " << _time << "\n";
     cout << "------- Absolute Error (AE) -------" << "\n";
     cout << "    MAE : " << _sum_err/double(_time) << "\n";
-    cout << " MAX AE : " << setprecision(8) << ((_max_abs > DBL_EPSILON) ? _max_abs : 0.0) << "\n";
-    cout << " MIN AE : " << setprecision(8) << ((_min_abs > DBL_EPSILON) ? _min_abs : 0.0) << "\n";
+    cout << " MAX AE : " << ((_max_abs > DBL_EPSILON) ? _max_abs : 0.0) << "\n";
+    cout << " MIN AE : " << ((_min_abs > DBL_EPSILON) ? _min_abs : 0.0) << "\n";
     cout << "- Absolute Percentage Error (APE) -" << "\n";
     cout << "   MAPE : " << _per_err/double(_time) << "\n";
-    cout << "MAX APE : " << setprecision(8) << ((_max_per > DBL_EPSILON) ? _max_per : 0.0) << "\n";
-    cout << "MIN APE : " << setprecision(8) << ((_min_per > DBL_EPSILON) ? _min_per : 0.0) << "\n";
+    cout << "MAX APE : " << ((_max_per > DBL_EPSILON) ? _max_per : 0.0) << "\n";
+    cout << "MIN APE : " << ((_min_per > DBL_EPSILON) ? _min_per : 0.0) << "\n";
 }

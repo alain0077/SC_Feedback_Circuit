@@ -17,9 +17,6 @@ SN CORDIV::operator() (SN divisor, SN dividend)
     int rn = rng();
     const int N = Define::N;
 
-    divisor = divisor.regeneration(rn);
-    dividend = dividend.regeneration(rn);
-
     std::bitset<N> mux;
 
     //D-FF

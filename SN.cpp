@@ -13,6 +13,17 @@ SN::SN(int x, int seed)
     _val = (double)_sn.count() / (double)N;
 }
 
+/// @brief コンストラクタ，数値xを初期値seedのLFSRでSNに変換し，値などを変数に登録，複数のSNGでLFSRを共有する時のビットシフトに対応
+/// @param x 定数
+/// @param seed 乱数生成器のseed
+/// @param shift ビットシフトするビット長
+SN::SN(int x, int seed, int shift)
+{
+    SNG(x, seed, shift);
+    _ans = (double)x  / (double)N;
+    _val = (double)_sn.count() / (double)N;
+}
+
 /// @brief コンストラクタ，指定したビット列のSNを生成．
 /// @param ans 本来の値
 /// @param val SNの値
@@ -35,6 +46,46 @@ void SN::SNG(int x, int seed)
         if (!flag && x >= lds[i]) _sn.set(i);
         // nonlinear lfsrは0～N-1の範囲の値を出力するため，>で比較
         else if(flag && x > lds[i]) _sn.set(i);
+    }
+}
+
+/// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
+/// @param x 定数
+/// @param seed 乱数生成器のseed
+/// @param shift ビットシフトするビット長
+void SN::SNG(int x, int seed, int shift)
+{
+    // ビットシフト用の値の設定
+    int mask = (1 << B) - 1;
+    int shift1 = (1 << shift) - 1;    int shift2 = mask - shift1;
+    int shift3 = shift1 << (B - shift);  int shift4 = mask - shift3;
+    
+    // LFSRまたは，nonliner LFSRより準乱数列を生成
+    vector<int> lds = flag? nonlinear_lfsr(x, seed) : lfsr(x, seed);
+
+    // Comparator
+    for (int i = 0; i < N; i++) {
+        // ビットシフト後の値
+        int shift_lfsr;
+
+        // LFSRから出力された準乱数をビットシフトする
+        int lfsr1, lfsr2;
+        lds[i] = lds[i] & mask;
+
+        if (shift == 0) {
+            shift_lfsr = lds[i];
+        }
+        else {
+            lfsr1 = lds[i] & shift1;       lfsr2 = lds[i] & shift2;
+            lfsr1 = lfsr1 << (B - shift);  lfsr2 = lfsr2 >> shift;
+            lfsr1 = lfsr1 & shift3;        lfsr2 = lfsr2 & shift4;
+            shift_lfsr = lfsr1 | lfsr2;
+        }
+
+        // lfsrは1～N-1の範囲の値を出力するため，>=で比較
+        if (!flag && x >= shift_lfsr) _sn.set(i);
+        // nonlinear lfsrは0～N-1の範囲の値を出力するため，>で比較
+        else if(flag && x > shift_lfsr) _sn.set(i);
     }
 }
 
