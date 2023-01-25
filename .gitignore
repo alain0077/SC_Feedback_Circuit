@@ -4,3 +4,6 @@
 #.cppと.hのみ追跡
 !*.cpp
 !*.h
+
+# README
+!*.md
