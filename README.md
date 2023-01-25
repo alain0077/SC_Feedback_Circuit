@@ -85,20 +85,20 @@ SN sn1 = SN(x, seed1);
 SN sn2 = SN(y, seed1);
 
 // SNを再生成
-SN sn3 = sn1.ReSNG(seed2);
+SN sn3 = sn2.ReSNG(seed2);
 
 // 2つのSNの相関を求める．
-double scc1 = sn2.SCC(sn1);
-double scc2 = sn2.SCC(sn3);
+double scc1 = sn1.SCC(sn2);
+double scc2 = sn1.SCC(sn3);
 
 // andをとる
 AND(sn1, sn2); // Min
-AND(sn3, sn2); // 掛け算
+AND(sn1, sn3); // 掛け算
 ```
 
 この例の```scc1```と```scc2```は違う値になる．
 厳密には，```scc1```は1に近い値を，```scc2```は0に近い値をそれぞれとる（はず，，，）．
-このとき，```sn1```と```sn2```，```sn3```と```sn2```の組み合わせでANDによる掛け算を行うと，Min関数と掛け算という結果にそれぞれなる．
+このとき，```sn1```と```sn2```，```sn1```と```sn3```の組み合わせでANDによる掛け算を行うと，Min関数と掛け算という結果にそれぞれなる．
 
 ## 表示・取得
 |      name      | description                            |
