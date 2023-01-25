@@ -89,7 +89,7 @@ void SN::SNG(int x, int seed, int shift)
     }
 }
 
-SN SN::regeneration(int seed)
+SN SN::ReSNG(int seed)
 {
     // Counter
     auto x = _sn.count();

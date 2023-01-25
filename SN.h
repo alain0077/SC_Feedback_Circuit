@@ -39,6 +39,17 @@ private:
   /// @return 準乱数列
   std::vector<int> nonlinear_lfsr(int x, int seed);
 
+  /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
+  /// @param x 定数
+  /// @param seed 乱数生成器のseed
+  void SNG(int x, int seed);
+
+  /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換，複数のSNGでLFSRを共有する時のビットシフトに対応
+  /// @param x 定数
+  /// @param seed 乱数生成器のseed
+  /// @param shift ビットシフトするビット長
+  void SNG(int x, int seed, int shift);
+
 public:
   /// @brief コンストラクタ，数値xを初期値seedのLFSRまたは，nonliner LFSRベースのSNGでSNに変換し，値などを変数に登録
   /// @param x 定数
@@ -57,20 +68,9 @@ public:
   /// @param sn SNのビット列
   SN(double ans, double val, std::bitset<N> sn);
 
-  /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
-  /// @param x 定数
-  /// @param seed 乱数生成器のseed
-  void SNG(int x, int seed);
-
-  /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換，複数のSNGでLFSRを共有する時のビットシフトに対応
-  /// @param x 定数
-  /// @param seed 乱数生成器のseed
-  /// @param shift ビットシフトするビット長
-  void SNG(int x, int seed, int shift);
-
   /// @brief SNを再生成する．
   /// @param seed 乱数生成器のseed
-  SN regeneration(int seed);
+  SN ReSNG(int seed);
 
   // 保持しているSNとその値を表示 
   void print_bs();
@@ -85,6 +85,6 @@ public:
   double get_ans() { return _ans; };
 
   /// @brief 2つのSNの相関の強さを取得
-  /// @param sn2 比較対象
-  double SCC(SN sn2);
+  /// @param sn 比較対象
+  double SCC(SN sn);
 };
