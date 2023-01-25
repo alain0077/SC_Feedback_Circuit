@@ -31,12 +31,12 @@ void Analysis::Update_Analysis(double ans, double val, double scc)
 
     // Compair and Update
     auto p = make_pair(scc, ans - val);
+    if(std::abs(_max_scc.first - scc) < DBL_EPSILON) _max_scc = std::abs(_max_scc.second) > std::abs(p.second) ? _max_scc : p;
     _max_scc = _max_scc.first > scc ? _max_scc : p;
-    if(std::abs(_max_scc.first - p.first) < DBL_EPSILON) _max_scc = std::abs(_max_scc.second) > std::abs(p.second) ? _max_scc : p;
+    if(std::abs(_min_scc.first - scc) < DBL_EPSILON) _min_scc = std::abs(_min_scc.second) > std::abs(p.second) ? _min_scc : p;
     _min_scc = _min_scc.first < scc ? _min_scc : p;
-    if(std::abs(_min_scc.first - p.first) < DBL_EPSILON) _min_scc = std::abs(_min_scc.second) > std::abs(p.second) ? _min_scc : p;
+    if(std::abs(_scc.first - scc) < DBL_EPSILON) _scc = std::abs(_scc.second) > std::abs(p.second) ? _scc : p;
     _scc = std::abs(_scc.first) < std::abs(scc) ? _scc : p;
-    if(std::abs(_scc.first) - std::abs(p.first) < DBL_EPSILON) _scc = std::abs(_scc.second) > std::abs(p.second) ? _scc : p;
 }
 
 /// @brief Print All Parameters

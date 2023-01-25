@@ -111,12 +111,15 @@ SN SN::regeneration(int seed)
     return SN(_ans, (double)sn.count()/(double)N, sn);
 }
 
-/// @brief Garois LFSR（線形帰還シフトレジスタ）
+/// @brief Fibonacci LFSR（線形帰還シフトレジスタ）
 /// @param x 目的の定数
 /// @param seed 乱数生成器のseed
 /// @return 準乱数列
 vector<int> SN::lfsr(int x, int seed)
 {
+    // bit mask
+    int mask = (1 << B) - 1;
+
     // shift register
     int sr = seed;
 
@@ -129,17 +132,20 @@ vector<int> SN::lfsr(int x, int seed)
     for(int i = 0; i < N; i++) {
         res.push_back(sr);
 
-        // 最下位ビットを抽出
-        int lsb = sr & 1;
+        // 最上位ビットを抽出
+        bool msb = (sr & (1 << (B - 1))) == (1 << (B - 1));
 
-        // 1ビット右シフト
-        sr >>= 1;
+        // 配置したxorについて演算する（次の最下位ビットの決定）
+        for (auto l : list) msb ^= (sr & (1 << l)) == (1 << l);
 
-        // 上位にビットに最下位ビットを挿入
-        sr |= (lsb << (B - 1));
+        // 1ビット左シフト
+        sr <<= 1;
 
-        // 配置したxorについて演算する
-        for (auto l : list) sr ^= (lsb << l);
+        // 最下位ビットにxorの演算結果を挿入
+        sr |= msb;
+
+        // bit masking
+        sr &= mask;
     }
 
     return res;
@@ -219,7 +225,7 @@ double SN::SCC(SN sn2)
     return scc;
 }
 
-/// @brief 最長Garois LFSRの構成において、XORの入力へ繋がるビットの設定
+/// @brief 最長Fibonacci LFSRの構成において、XORの入力へ繋がるビットの設定
 /// @return XORの配置位置を示す配列
 vector<int> SN::get_seq_linear()
 {

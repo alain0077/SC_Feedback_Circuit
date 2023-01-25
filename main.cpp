@@ -1,6 +1,4 @@
-﻿//#define _CRT_SECURE_NO_WARNINGS
-
-#include "SC.h"
+﻿#include "SC.h"
 #include "SN.h"
 #include "Define.h"
 #include "Random.h"

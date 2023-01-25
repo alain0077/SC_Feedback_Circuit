@@ -19,7 +19,7 @@ private:
   double _val;    // SNの値
   double _ans;   // 本来の分子の値
 
-  /// @brief 最長Garois LFSRの構成において、XORの入力へ繋がるビットの設定
+  /// @brief 最長Fibonacci LFSRの構成において、XORの入力へ繋がるビットの設定
   /// @return XORの配置位置を示す配列
   std::vector<int> get_seq_linear();
 
@@ -27,7 +27,7 @@ private:
   /// @return XORの配置位置を示す配列
   std::vector<int> get_seq_nonlinear();
 
-  /// @brief Garois LFSR（線形帰還シフトレジスタ）
+  /// @brief Fibonacci LFSR（線形帰還シフトレジスタ）
   /// @param x 目的の定数
   /// @param seed 乱数生成器のseed
   /// @return 準乱数列
