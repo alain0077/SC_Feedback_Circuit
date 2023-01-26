@@ -1,4 +1,5 @@
 # <!-- omit in toc -->
+Stochastic Computing（SC）での演算回路についての理論値を求めるためのプログラムです．
 
 # Class <!-- omit in toc -->
 本プログラムで実装した一部のクラスについて簡単に説明．
@@ -136,9 +137,7 @@ double err = ans - val;
 演算前後のSNの状態の確認や，演算誤差の計算に用いることができる．
 
 # SC::Division::Feedback
-SCに関する演算はSCというnamespaceにまとめている．
-その内の一つであるDivisionのFeedbackについて説明する． 
-SCでの除算をするクラス．Feedbackによる除算回路がベースになっている．
+SCに関する演算はSCというnamespaceにまとめている．使い方は統一しているため，その内の一つであるDivisionのFeedbackについて説明する．SCでの除算をするクラス．Feedbackによる除算回路がベースになっている．
 
 ## メンバ関数
 + [コンストラクタ](#コンストラクタ-1)
