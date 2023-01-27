@@ -15,8 +15,8 @@ int main()
 
     //auto randN = Random();
 
-    auto divion1 = Feedback();
-    auto divion2 = CORDIV();
+    auto div1 = Feedback();
+    auto div2 = CORDIV();
 
     for(int t = 0; t < 1; t++) {
         //randN.seed((unsigned int)time(NULL));
@@ -31,19 +31,19 @@ int main()
                 SN sn2 = SN(j, rn2, 0);
                 SN sn3 = SN(j, rn1, 2);
 
-                divion1(sn1, sn2);
-                divion2(sn1, sn3);
+                div1(sn1, sn2);
+                div2(sn1, sn3);
             }
         }
 
-        //cout << divion1.get_MAPE() << endl;
-        //cout << divion2.get_MAPE() << endl;
+        //cout << div1.get_MAPE() << endl;
+        //cout << div2.get_MAPE() << endl;
     }
     
     cout << "Feedback" << endl;
-    divion1.print_Summary();
+    div1.print_Summary();
     cout << "CORDIV" << endl;
-    divion2.print_Summary();
+    div2.print_Summary();
 
     clock_t end = clock();     // 終了時間
     cout << (double)(end - start) / CLOCKS_PER_SEC << endl;
