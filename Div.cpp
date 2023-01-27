@@ -1,5 +1,4 @@
 #include "SC.h"
-#include "Random.h"
 
 using namespace SC::Divison;
 
@@ -12,9 +11,6 @@ CORDIV::CORDIV() : Analysis()
 
 SN CORDIV::operator() (SN divisor, SN dividend)
 {
-    auto rng = Random();
-
-    int rn = rng();
     const int N = Define::N;
 
     //MUX
