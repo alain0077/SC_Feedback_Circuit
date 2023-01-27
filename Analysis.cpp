@@ -16,8 +16,8 @@ void Analysis::reset()
 {
     AbsError::reset();
 
-    _max_scc = {0.0, 0.0};
-    _min_scc = {-1.1, 0.0};
+    _max_scc = {-1.1, 0.0};
+    _min_scc = {1.1, 0.0};
     _scc = {1.1, 0.0};
 }
 
