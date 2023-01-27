@@ -260,7 +260,8 @@ int seed2;  // 乱数その２
 // 演算回路クラスを呼び出す
 auto mult = SC::Multiplication::AND();
 
-// 全パターンを実行
+// SNGに与えるseedを固定して
+// 入力の全パターンを実行
 for(int i = 1; i < N; i++) {
   for(int j = 1; j < N; j++) {
     // 入力SNを生成
