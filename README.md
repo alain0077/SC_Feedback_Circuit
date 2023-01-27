@@ -1,5 +1,6 @@
-# <!-- omit in toc -->
-Stochastic Computing（SC）での演算回路についての理論値を求めるためのプログラムです．
+# プログラム概要 <!-- omit in toc -->
+Stochastic Computing（SC）での演算回路についての理論値を求めるためのプログラムです．Stochastic Number
+演算誤差や
 
 # Class <!-- omit in toc -->
 本プログラムで実装した一部のクラスについて簡単に説明．
@@ -9,11 +10,15 @@ Stochastic Computing（SC）での演算回路についての理論値を求め�
   - [コンストラクタ](#コンストラクタ)
   - [相関](#相関)
   - [表示・取得](#表示取得)
-- [SC::Division::Feedback](#scdivisionfeedback)
+- [SC演算回路](#sc演算回路)
   - [メンバ関数](#メンバ関数-1)
-  - [使用例](#使用例)
+  - [コンストラクタ](#コンストラクタ-1)
+  - [演算子](#演算子)
+  - [表示・取得](#表示取得-1)
+  - [初期化](#初期化)
+  - [使用例1](#使用例1)
+  - [使用例2](#使用例2)
 
----
 # SN
 Stochastic Number（SN）を生成，管理するクラス．
 SNのビット列や値，そのSNの相関操作を行うことができる．
@@ -94,7 +99,7 @@ AND(sn1, sn3); // 掛け算
 ```
 
 この例の```scc1```と```scc2```は違う値になる．
-厳密には，```scc1```は1に近い値を，```scc2```は0に近い値をそれぞれとる（はず，，，）．
+厳密には，```scc1```は1に近い値を，```scc2```は0に近い値をそれぞれとる（はず…）．
 このとき，```sn1```と```sn2```，```sn1```と```sn3```の組み合わせでANDをとると，Min関数と掛け算という結果にそれぞれなる．
 
 ## 表示・取得
@@ -105,7 +110,8 @@ AND(sn1, sn3); // 掛け算
 | ```get_val```  | SNの値を取得する．                     |
 | ```get_ans```  | 演算誤差なしのSNの値を取得する．       |
 
-SNの状態を表示したり，取得したりするための関数．使用例を下記に示す．
+SNの状態を表示したり，取得したりするための関数．
+演算前後のSNの状態の確認や，演算誤差の計算に用いることができる．
 
 ```c++
 int N;      // SNのビット長
@@ -134,38 +140,138 @@ double ans = sn3.get_ans();
 double err = ans - val;
 ```
 
-演算前後のSNの状態の確認や，演算誤差の計算に用いることができる．
+# SC演算回路
+SCに関する演算回路はSCというnamespaceにまとめている．
+実行毎に演算誤差や最大・最小誤差などを記録する．また，相関による演算誤差を確かめるために，与えられた入力の組み合わせの中で，相関が1，0，-1にそれぞれ一番近いときの誤差を記録する．実装した演算は下記の通りである．
 
-# SC::Division::Feedback
-SCに関する演算はSCというnamespaceにまとめている．使い方は統一しているため，その内の一つであるDivisionのFeedbackについて説明する．SCでの除算をするクラス．Feedbackによる除算回路がベースになっている．
++ Addtion
+  + MUX
+  + OR
+  + NSAdd
++ Multiplication
+  + AND
++ Division
+  + CORDIV
+  + Feedback
++ Min
+  + AND
++ Max
+  + OR
 
 ## メンバ関数
 + [コンストラクタ](#コンストラクタ-1)
+  + MUX()
+  + OR()
+  + NSAdd()
+  + Multiplication::AND()
+  + CORDIV()
   + Feedback()
+  + Min::AND()
+  + Max::OR()
 + [演算子](#演算子)
   + operator() (SN, SN) : SN
 + [表示・取得](#表示取得-1)
+  + get_MAE() : double
+  + get_MAPE() : double
+  + get_MAX_AE() : double
+  + get_MAX_APE() : double
+  + get_MIN_AE() : double
+  + get_MIN_APE() : double
   + get_SCC() : vector<pair<double, double>>
   + print_Summary() : void
 + [初期化](#初期化)
   + reset() : void
 
-## 使用例
+使い方は統一しているため，下記の[使用例1](#使用例1)や[使用例2](#使用例2)では，MultiplicationのANDでの例を示している．
+
+## コンストラクタ
+|       name       | description      |
+| :--------------: | :--------------- |
+| ```MUX``` | 1/2スケール加算． |
+| ```OR``` | 入力の負の相関が最大のときに，飽和加算． |
+| ```NSAdd``` | 飽和加算．|
+| ```Multiplication::AND``` | 入力に相関ないときに，乗算．|
+| ```CORDIV``` | 入力の正の相関が最大のときに，除算．|
+| ```Feedback``` | 除算．|
+| ```Min::AND``` | 入力の正の相関が最大のときに，最小値を出力．|
+| ```Max::OR``` | 入力の正の相関が最大のときに，最小値を出力． |
+
+## 演算子
+|       name       | description      |
+| :--------------: | :--------------- |
+| ```operator()``` | 演算を実行する． |
+
+## 表示・取得
+|        name         | description                                            |
+| :-----------------: | :----------------------------------------------------- |
+|    ```get_MAE```    | 絶対平均誤差を取得する．                               |
+|   ```get_MAPE```    | 平均エラー率を取得する．                               |
+|  ```get_MAX_AE```   | 最大の絶対誤差を取得する．                             |
+|  ```get_MAX_APE```  | 最大のエラー率を取得する．                             |
+|  ```get_MIN_AE```   | 最小の絶対誤差を取得する．                             |
+|  ```get_MIN_APE```  | 最小のエラー率を取得する．                             |
+|    ```get_SCC```    | 相関が1，0，-1にそれぞれ一番近いときの誤差を取得する． |
+| ```print_Summary``` | それぞれのパラメータをまとめて表示する．               |
+
+
+## 初期化
+|    name     | description                                   |
+| :---------: | :-------------------------------------------- |
+| ```reset``` | MAEやMAPEなどの演算誤差のパラメータの初期化． |
+
+## 使用例1
+`x`と`y`を`mult`に与え，結果を表示し，その絶対誤差とエラー率を表示している．この例では，演算を一回しか実行していないため，`print_Summary()`などで表示されるパラメータは，あまり意味はなさない（かも…？）．
+
 ```c++
 int x, y;   // 定数（SNに変換する値）
 int seed1;  // 乱数その１
 int seed2;  // 乱数その２
 
-// SNを生成
+// 入力SNを生成
 SN sn1 = SN(x, seed1);
 SN sn2 = SN(y, seed2);
 
-// 演算クラスを呼び出す
-Feedback div = Feedback();
+// 入力SNを表示
+sn1.print_bs();
+sn2.print_bs();
+
+// 演算回路クラスを呼び出す
+auto mult = SC::Multiplication::AND();
 
 // 演算実行
-SN sn3 = div(sn1, sn2);
+SN sn3 = mult(sn1, sn2);
 
-// 演算誤差などの詳細をprint
-div.print_Summary();
+// 出力SNを表示
+sn3.print_bs();
+
+// 絶対誤差・エラー率を取得
+std::cout << mult.get_MAE()  << std::endl;
+std::cout << mult.get_MAPE() << std::endl;
+```
+
+## 使用例2
+Stochastic Number Generator（SNG）に与えるseed値を固定したとき，Nビット長のSNの全ての組み合わせに対して，掛け算を実行している．そして，結果を`print_Summary()`で表示すると，MAEやMAPEなどを確認することができる．
+
+```c++
+int N;      // SNのビット長
+int seed1;  // 乱数その１
+int seed2;  // 乱数その２
+
+// 演算回路クラスを呼び出す
+auto mult = SC::Multiplication::AND();
+
+// 全パターンを実行
+for(int i = 1; i < N; i++) {
+  for(int j = 1; j < N; j++) {
+    // 入力SNを生成
+    SN sn1 = SN(i, seed1);
+    SN sn2 = SN(j, seed2);
+
+    // 演算実行
+    mult(sn1, sn2);
+  }
+}
+
+// 演算誤差などの結果を表示
+mult.print_Summary();
 ```
