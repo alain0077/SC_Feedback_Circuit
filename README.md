@@ -287,7 +287,7 @@ mult.print_Summary();
 SNの生成時にSNGに与える整数の乱数を生成するためのクラス．C++のライブラリである`random`を用いた乱数生成の流れをクラスにまとめた．分布生成器は一様整数分布（`uniform_int_distribution`）を，議事乱数生成器はメルセンヌ・ツイスター法（`mt19937`）を用いている．詳しくは[こちら](https://cpprefjp.github.io/reference/random.html)を参照．乱数生成のためのseed値は，コンストラクタの呼び出し時に`rnd()`で得られる値で初期化される．また，生成範囲は，SNのビット長をNとすると，`1`から`N - 1`までに初期化される．
 
 ## メンバ関数
-+ [構築・リセット](#)
++ [構築・リセット](#構築リセット)
   + Random()
   + ~Random() = default;
   + reset() : void
