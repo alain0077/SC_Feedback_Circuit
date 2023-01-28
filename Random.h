@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Define.h"
 #include <random>
 
@@ -20,6 +19,10 @@ public:
     Random();
 
     ~Random() = default;
+
+    /// @brief Reset the param
+    /// @details Reset the parameters.
+    void reset();
 
     /// @brief Return random integer
     /// @details Return random integer such that min() <= N <= max()

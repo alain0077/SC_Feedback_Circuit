@@ -17,6 +17,11 @@ Random::Random()
     _dist.param(param);
 }
 
+void Random::reset()
+{
+    _dist.reset();
+}
+
 void Random::range(int min, int max)
 {
     // Set the range from min to max.
