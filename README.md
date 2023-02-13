@@ -269,7 +269,7 @@ SCに関する演算をまとめたヘッダ．実装した関数は，`namespac
 ## 使用例
 例えば，平方根をとるようなFeedback回路について検証したい場合．
 
-まず，`SCSQRT`という関数を作ります．この時，事前に[Function](#feedbackfunction)クラスを継承したOutput関数とFeedback関数は実装しているものとします．実際にどのような関数を実装すればよいかの詳細は省きます．知りたい場合は[こちら](https://ieeexplore.ieee.org/document/9319166)を参照して下さい．
+まず，`SCSQRT`という関数を作ります．この時，事前に[Function](#feedbackfunction)クラスを継承したOutput関数とFeedback関数は実装しているものとします．実際にどのような関数を実装すればよいかの詳細は省きます．知りたい場合は，「[FeedbackによるSC演算の実現手法とは？](##feedbackによるsc演算の実現手法とは)」を読んでみて下さい．
 
 ```c++:SCSQRT.h
 int N;      // SNのビット長
