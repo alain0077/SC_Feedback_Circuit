@@ -8,6 +8,7 @@
 using namespace std;
 using namespace SC;
 
+// プロトタイプ宣言
 vector<int> lfsr(int x, int seed);
 vector<int> nonlinear_lfsr(int x, int seed);
 vector<int> get_seq_linear();

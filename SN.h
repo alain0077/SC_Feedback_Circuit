@@ -5,9 +5,6 @@
 #include <cmath>
 
 namespace SC {
-  /*
-    Stochastic Numberのクラス
-  */
   class SN
   {
   private:
