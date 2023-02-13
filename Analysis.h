@@ -1,5 +1,4 @@
 #pragma once
-
 #include "AbsError.h"
 #include "SN.h"
 #include <string>
@@ -18,17 +17,16 @@ private:
     // Close to 0
     std::pair<double, double> _scc;
 
-protected:
-    /// @brief Update paramerter
-    /// @param ans Correct answer
-    /// @param val The value of output SN
-    /// @param scc SCC of inputs SN
-    void Update_Analysis(double ans, double val, double scc);
-
 public:
     /// @brief Constractor
     Analysis();
     virtual ~Analysis() = default;
+
+    /// @brief Update paramerter
+    /// @param ans Correct answer
+    /// @param val The value of output SN
+    /// @param scc SCC of inputs SN
+    void Update(const double& ans, const double& val, const double& scc);
 
     /// @brief Initialize the parameters
     void reset();
@@ -38,5 +36,5 @@ public:
     std::vector<std::pair<double, double>> get_SCC() { return {_max_scc, _min_scc, _scc}; };
 
     /// @brief Print All Parameters
-    void print_Summary() const;
+    void print_Summary() const override;
 };

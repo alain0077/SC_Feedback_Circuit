@@ -25,9 +25,9 @@ void Analysis::reset()
 /// @param ans Correct answer
 /// @param val The value of output SN
 /// @param scc SCC of inputs SN
-void Analysis::Update_Analysis(double ans, double val, double scc)
+void Analysis::Update(const double& ans, const double& val, const double& scc)
 {
-    Update_Error(ans, val);
+    AbsError::Update(ans, val);
 
     // Compair and Update
     auto p = make_pair(scc, ans - val);
