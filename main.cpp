@@ -1,25 +1,32 @@
-﻿#include "SC.h"
-#include "SN.h"
-#include "Define.h"
-#include "Random.h"
+﻿#include "Random.h"
+#include "AbsError.h"
+#include "Analysis.h"
+#include "FeedbackCircuit.h"
+
+#include "MyDiv.h"
+#include "Calculation.h"
+
 #include <time.h>
 #include <fstream>
 #include <iostream>
 
 using namespace std;
-using namespace SC::Divison;
+using namespace SC;
+using namespace Feedback;
 
 int main()
 {
     clock_t start = clock();    // スタート時間
 
-    //auto randN = Random();
+    // // 乱数生成器  
+    // auto randN = Random();
 
-    auto div1 = Feedback();
-    auto div2 = CORDIV();
-
+    // 演算誤差などを記録するクラス
+    AbsError ERR_FBDIV;
+    AbsError ERR_CORDIV;
+    
     for(int t = 0; t < 1; t++) {
-        //randN.seed((unsigned int)time(NULL));
+        // randN.seed((unsigned int)time(NULL));
 
         int rn1 = Random()();
         int rn2 = Random()();
@@ -31,19 +38,22 @@ int main()
                 SN sn2 = SN(j, rn2, 0);
                 SN sn3 = SN(j, rn1, 2);
 
-                div1(sn1, sn2);
-                div2(sn1, sn3);
+                SN div1 = MyDiv(sn1, sn2);
+                SN div2 = CORDIV(sn1, sn3);
+
+                ERR_FBDIV.Update(div1.get_ans(), div1.get_val());
+                ERR_CORDIV.Update(div2.get_ans(), div2.get_val());
             }
         }
 
-        //cout << div1.get_MAPE() << endl;
-        //cout << div2.get_MAPE() << endl;
+        //cout << ERR_FBDIV.get_MAPE() << endl;
+        //cout << ERR_CORDIV.get_MAPE() << endl;
     }
-    
+
     cout << "Feedback" << endl;
-    div1.print_Summary();
+    ERR_FBDIV.print_Summary();
     cout << "CORDIV" << endl;
-    div2.print_Summary();
+    ERR_CORDIV.print_Summary();
 
     clock_t end = clock();     // 終了時間
     cout << (double)(end - start) / CLOCKS_PER_SEC << endl;
