@@ -10,6 +10,7 @@ namespace Feedback
         virtual ~NSAdd() = default;
 
         /// @brief NSAdd
+        ///////
         void Run(const bool& lhs, const bool& rhs) override;
     
     private:
