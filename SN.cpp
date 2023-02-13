@@ -1,14 +1,24 @@
 #include "SN.h"
 #include <iostream>
 
+#define N Define::N
+#define B Define::B
+#define flag Define::PRNG
+
 using namespace std;
+using namespace SC;
+
+vector<int> lfsr(int x, int seed);
+vector<int> nonlinear_lfsr(int x, int seed);
+vector<int> get_seq_linear();
+vector<int> get_seq_nonlinear();
 
 /// @brief コンストラクタ，数値xを初期値seedのLFSRまたは，nonliner LFSRベースのSNGでSNに変換し、値などを変数に登録
 /// @param x 定数
 /// @param seed 乱数生成器のseed
 SN::SN(int x, int seed)
 {
-    SNG(x, seed);
+    _sn = SNG(x, seed).get_sn();
     _ans = (double)x  / (double)N;
     _val = (double)_sn.count() / (double)N;
 }
@@ -19,7 +29,7 @@ SN::SN(int x, int seed)
 /// @param shift ビットシフトするビット長
 SN::SN(int x, int seed, int shift)
 {
-    SNG(x, seed, shift);
+    _sn = SNG(x, seed, shift).get_sn();
     _ans = (double)x  / (double)N;
     _val = (double)_sn.count() / (double)N;
 }
@@ -32,29 +42,41 @@ SN::SN(double ans, double val, std::bitset<N> sn) : _ans(ans), _val(val), _sn(sn
 {
 }
 
+// 保持しているSNとその値を表示 
+void SN::print_bs() const
+{
+    cout << _sn << " = " << _sn.count() << "/" << N << " = " << _val << endl;
+}
+
 /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
 /// @param x 定数
 /// @param seed 乱数生成器のseed
-void SN::SNG(int x, int seed)
+SN SC::SNG(int x, int seed)
 {
+    bitset<N> sn;
+
     // LFSRまたは，nonliner LFSRより準乱数列を生成
     vector<int> lds = flag? nonlinear_lfsr(x, seed) : lfsr(x, seed);
 
     // Comparator
     for (int i = 0; i < N; i++) {
         // lfsrは1～N-1の範囲の値を出力するため，>=で比較
-        if (!flag && x >= lds[i]) _sn.set(i);
+        if (!flag && x >= lds[i]) sn.set(i);
         // nonlinear lfsrは0～N-1の範囲の値を出力するため，>で比較
-        else if(flag && x > lds[i]) _sn.set(i);
+        else if(flag && x > lds[i]) sn.set(i);
     }
+
+    return SN((double)x / (double) N, (double)sn.count()/(double)N, sn);
 }
 
 /// @brief 定数xを初期値seedのLFSR，nonliner LFSRでSNに変換
 /// @param x 定数
 /// @param seed 乱数生成器のseed
 /// @param shift ビットシフトするビット長
-void SN::SNG(int x, int seed, int shift)
+SN SC::SNG(int x, int seed, int shift)
 {
+    bitset<N> sn;
+
     // ビットシフト用の値の設定
     int mask = (1 << B) - 1;
     int shift1 = (1 << shift) - 1;    int shift2 = mask - shift1;
@@ -83,39 +105,50 @@ void SN::SNG(int x, int seed, int shift)
         }
 
         // lfsrは1～N-1の範囲の値を出力するため，>=で比較
-        if (!flag && x >= shift_lfsr) _sn.set(i);
+        if (!flag && x >= shift_lfsr) sn.set(i);
         // nonlinear lfsrは0～N-1の範囲の値を出力するため，>で比較
-        else if(flag && x > shift_lfsr) _sn.set(i);
+        else if(flag && x > shift_lfsr) sn.set(i);
     }
+
+    return SN((double)x / (double) N, (double)sn.count()/(double)N, sn);
 }
 
-SN SN::ReSNG(int seed)
+// 2つのSNの相関の強さを取得
+double SC::SCC(const SN& lhs, const SN& rhs)
 {
-    // Counter
-    auto x = _sn.count();
+    bitset<N> sn1 = lhs.get_sn();
+    bitset<N> sn2 = rhs.get_sn();
+    bitset<N> sn3 = sn1 & sn2;
 
-    // 再生したSN
-    bitset<N> sn;
+    double p12 = (double)sn3.count() / (double)N;
+    double p1 = (double)sn1.count() / (double)N;
+    double p2 = (double)sn2.count() / (double)N;
 
-    // LFSRまたは，nonliner LFSRより準乱数列を生成
-    vector<int> lds = flag? nonlinear_lfsr(x, seed) : lfsr(x, seed);
+    double omega = p12 - (p1 * p2);
+    double scc;
 
-    // Comparator
-    for (int i = 0; i < N; i++) {
-        // lfsrは1～N-1の範囲の値を出力するため，>=で比較
-        if (!flag && x >= lds[i]) sn.set(i);
-        // nonlinear lfsrは0～N-1の範囲の値を出力するため，>で比較
-        else if(flag && x > lds[i]) sn.set(i);
+    double a = p1 + p2 - 1;
+    double b = 0;
+
+    if (omega > 0) {
+        scc = omega / (min(p1, p2) - (p1 * p2));
+    }
+    else {
+        scc = omega / ((p1 * p2) - max(a, b));
     }
 
-    return SN(_ans, (double)sn.count()/(double)N, sn);
+    if (isnan(scc)) {
+        return 0;
+    }
+
+    return scc;
 }
 
 /// @brief Fibonacci LFSR（線形帰還シフトレジスタ）
 /// @param x 目的の定数
 /// @param seed 乱数生成器のseed
 /// @return 準乱数列
-vector<int> SN::lfsr(int x, int seed)
+vector<int> lfsr(int x, int seed)
 {
     // bit mask
     int mask = (1 << B) - 1;
@@ -155,7 +188,7 @@ vector<int> SN::lfsr(int x, int seed)
 /// @param x 目的の定数
 /// @param seed 乱数生成器のseed
 /// @return 準乱数列
-vector<int> SN::nonlinear_lfsr(int x, int seed)
+vector<int> nonlinear_lfsr(int x, int seed)
 {
     // shift register
     int sr = seed;
@@ -188,46 +221,9 @@ vector<int> SN::nonlinear_lfsr(int x, int seed)
     return res;
 }
 
-// 保持しているSNとその値を表示 
-void SN::print_bs()
-{
-    cout << _sn << " = " << _sn.count() << "/" << N << " = " << _val << endl;
-}
-
-// 2つのSNの相関の強さを取得
-double SN::SCC(SN sn2)
-{
-    bitset<N> input1 = _sn;
-    bitset<N> input2 = sn2._sn;
-    bitset<N> sn3 = input1 & input2;
-
-    double p12 = (double)sn3.count() / (double)N;
-    double p1 = (double)input1.count() / (double)N;
-    double p2 = (double)input2.count() / (double)N;
-
-    double omega = p12 - (p1 * p2);
-    double scc;
-
-    double a = p1 + p2 - 1;
-    double b = 0;
-
-    if (omega > 0) {
-        scc = omega / (min(p1, p2) - (p1 * p2));
-    }
-    else {
-        scc = omega / ((p1 * p2) - max(a, b));
-    }
-
-    if (isnan(scc)) {
-        return 0;
-    }
-
-    return scc;
-}
-
 /// @brief 最長Fibonacci LFSRの構成において、XORの入力へ繋がるビットの設定
 /// @return XORの配置位置を示す配列
-vector<int> SN::get_seq_linear()
+vector<int> get_seq_linear()
 {
     if (B == 3)
         return { 1 };
@@ -255,7 +251,7 @@ vector<int> SN::get_seq_linear()
 
 /// @brief 最長Nonliner LFSRの構成において、XORの入力へ繋がるビットの設定
 /// @return XORの配置位置を示す配列
-vector<int> SN::get_seq_nonlinear()
+vector<int> get_seq_nonlinear()
 {
     if (B == 3)
         return { 2, 0 };
