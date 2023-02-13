@@ -25,16 +25,15 @@ private:
     // Trials
     unsigned int _time;
 
-protected:
-    /// @brief Update the value
-    /// @param ans Correct value
-    /// @param val The value of output SN
-    void Update_Error(double ans, double val);
-
 public:
     /// @brief Constructor
     AbsError();
     virtual ~AbsError() = default;
+
+    /// @brief Update the value
+    /// @param ans Correct value
+    /// @param val The value of output SN
+    virtual void Update(const double& ans, const double& val);
 
     /// @brief Reset the parameters
     void reset();
@@ -64,5 +63,5 @@ public:
     double get_MIN_APE() {return _min_per; };
 
     /// @brief Print All Parameters
-    void  print_Summary() const;
+    virtual void  print_Summary() const;
 };

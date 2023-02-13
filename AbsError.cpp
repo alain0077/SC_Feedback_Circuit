@@ -15,7 +15,7 @@ _max_abs(0.0), _min_abs(DBL_MAX), _max_per(0.0), _min_per(DBL_MAX)
 /// @brief Update the value
 /// @param ans Correct value
 /// @param val The value of output SN
-void AbsError::Update_Error(double ans, double val)
+void AbsError::Update(const double& ans, const double& val)
 {
     // Count up
     _time++;
