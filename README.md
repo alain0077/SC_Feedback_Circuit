@@ -1,26 +1,37 @@
 # プログラム概要 <!-- omit in toc -->
-Stochastic Computing（SC）での演算回路についての理論値を求めるためのプログラムです．Stochastic Numberの生成・相関操作などをSCというnamespaceにまとめました．また，SCにおけるFeedback回路のプログラムでの実装・検証が簡単にできるようにしました．
+Stochastic Computing（SC）での演算回路についての理論値を求めるためのプログラムです．Stochastic Numberの生成・相関操作などをSCというnamespaceにまとめました．
+また，FeedbackによるSC演算の実現手法によって実現した回路のシミュレーションが簡単にできるようにしました．
 
-# SCにおけるFeedback回路とは？ <!-- omit in toc -->
-プログラム製作者の研究テーマです．簡単に説明すると，「Feedback回路により，従来のSC演算回路よりも低コストで実現できるのでは」という考えをもとに，その実装手順をフレームワークにまとめ，実現例を模索しています．
-下図のような回路をFeedback回路と呼んでいます．
+# FeedbackによるSC演算の実現手法とは？ <!-- omit in toc -->
+プログラム製作者の研究テーマです．簡単に説明すると，「Feedback回路により，従来のSC演算回路よりも低コストで実現できるのでは」という考えをもとに，その実装手順をフレームワークにまとめ，有用性を示すために実現例を模索しています．下図のような回路をFeedback回路と呼んでいます．
 
 ![Feedback回路](https://github.com/alain0077/SC_Feedback_Circuit/blob/img/Feedback.png)
 
 この図のOutput関数とFeedback関数を何かしらの回路に置き換えることにより，目的の演算回路を実現します．
 
-例えば，Output関数の方を[NSAdd](https://ieeexplore.ieee.org/document/9139000)という飽和加算器の回路に置き換えたとします[^NSAdd]．先ほどの図の回路の出力は次の式のようになります．
+例えば，目的の演算回路を平方根として，Output関数を[NSAdd](https://ieeexplore.ieee.org/document/9139000)という飽和加算器の回路に置き換えたとします[^nsadd]．先ほどの図の回路の出力は次の式のような式で表すことが出来ます．
 
 $Out = In + Feedback$
 
-このとき，目的の演算回路を平方根とすると，$Out = In^2$となります．
-つまり，先ほどの式は次のようになります．
+これをFeedbackについて解くと，
 
-$Out = \sqrt{Out^2} + Feedback$
+$Feedback = In - Out$
 
-したがって，Feedbackは
+が得られます．このとき，目的の演算回路を平方根回路であるから，$Out = In^2$となります．つまり，先ほどの式は，
 
-[^NSAdd]: Non-Scale-Additionのこと．詳しくは[こちら](https://ieeexplore.ieee.org/document/9139000)の論文を参照．
+$Feedback = \sqrt{Out^2} + Out$
+
+となります．したがって，Feedback関数がこの式を満たすとき，平方根回路の実現ができます．また，この式を変形すると，
+
+$Feedback = \sqrt{Out^2} * (1 - \sqrt{Out^2})$
+
+が得られます．よって，目的の演算回路が平方根のとき，Feedback関数は次のような図の回路を満たせば良いことが分かります．
+
+![平方根回路](https://github.com/alain0077/SC_Feedback_Circuit/blob/img/SQRT.png)
+
+本手法は[こちら](https://ieeexplore.ieee.org/document/9319166)の論文がもとになっています．ここで説明した平方根の実現の仕方も，少し違うアプローチですが，提案されています．
+
+[^nsadd]: Non-Scale-Additionのこと．詳しくは[こちら](https://ieeexplore.ieee.org/document/9139000)の論文を参照．
 
 # 仕様・説明 <!-- omit in toc -->
 本プログラムで実装した一部のクラスや関数の使い方などについて簡単に説明．
