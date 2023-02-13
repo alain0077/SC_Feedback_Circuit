@@ -3,10 +3,24 @@ Stochastic Computing（SC）での演算回路についての理論値を求め�
 
 # SCにおけるFeedback回路とは？ <!-- omit in toc -->
 プログラム製作者の研究テーマです．簡単に説明すると，「Feedback回路により，従来のSC演算回路よりも低コストで実現できるのでは」という考えをもとに，その実装手順をフレームワークにまとめ，実現例を模索しています．
-図[-@fig:id]のような回路をFeedback回路と呼んでいます．
+下図のような回路をFeedback回路と呼んでいます．
 
-![Feedback回路](https://github.com/alain0077/SC_Feedback_Circuit/blob/img/Feedback.png){#fig:id}
+![Feedback回路](https://github.com/alain0077/SC_Feedback_Circuit/blob/img/Feedback.png)
 
+この図のOutput関数とFeedback関数を何かしらの回路に置き換えることにより，目的の演算回路を実現します．
+
+例えば，Output関数の方を[NSAdd](https://ieeexplore.ieee.org/document/9139000)という飽和加算器の回路に置き換えたとします[^NSAdd]．先ほどの図の回路の出力は次の式のようになります．
+
+$Out = In + Feedback$
+
+このとき，目的の演算回路を平方根とすると，$Out = In^2$となります．
+つまり，先ほどの式は次のようになります．
+
+$Out = \sqrt{Out^2} + Feedback$
+
+したがって，Feedbackは
+
+[^NSAdd]: Non-Scale-Additionのこと．詳しくは[こちら](https://ieeexplore.ieee.org/document/9139000)の論文を参照．
 
 # 仕様・説明 <!-- omit in toc -->
 本プログラムで実装した一部のクラスや関数の使い方などについて簡単に説明．
