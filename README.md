@@ -3,9 +3,9 @@ Stochastic Computing（SC）での演算回路についての理論値を求め�
 
 # SCにおけるFeedback回路とは？ <!-- omit in toc -->
 プログラム製作者の研究テーマです．簡単に説明すると，「Feedback回路により，従来のSC演算回路よりも低コストで実現できるのでは」という考えをもとに，その実装手順をフレームワークにまとめ，実現例を模索しています．
-図[-@fig:Feedback]のような回路をFeedback回路と呼んでいます．
+図[-@fig:id]のような回路をFeedback回路と呼んでいます．
 
-![Feedback回路](https://github.com/alain0077/SC_Feedback_Circuit/blob/img/Feedback.png){#fig:Feedback}
+![Feedback回路](https://github.com/alain0077/SC_Feedback_Circuit/blob/img/Feedback.png){#fig:id}
 
 
 # 仕様・説明 <!-- omit in toc -->
