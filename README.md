@@ -33,6 +33,9 @@ $Feedback = \sqrt{Out^2} * (1 - \sqrt{Out^2})$
 
 [^nsadd]: Non-Scale-Additionのこと．詳しくは[こちら](https://ieeexplore.ieee.org/document/9139000)の論文を参照．
 
+# 基本的な使い方 <!-- omit in toc -->
+
+
 # 仕様・説明 <!-- omit in toc -->
 本プログラムで実装した一部のクラスや関数の使い方などについて簡単に説明．
 ###### ※使用例などで書いているコードはコンパイルは通らないです．
@@ -331,7 +334,7 @@ int main()
   return 0;
 }
 ```
-実際に実行できるSQRT関数は[SQRT.h]()で定義してます．興味があれば参考にして下さい．
+実際に実行できるSQRT関数は[SQRT.h](https://github.com/alain0077/SC_Feedback_Circuit/blob/master/SQRT.h)で定義してます．実装は[SQRT.cpp](https://github.com/alain0077/SC_Feedback_Circuit/blob/master/SQRT.cpp)です．興味があれば参考にして下さい．
 
 # Feedback::Function
 [FeedbackCircuit](#feedbackfeedbackcircuit)クラスに与える，Output関数とFeedback関数を実装するときに継承するクラス．任意の関数を実装したいときは，このクラスを継承しないと[FeedbackCircuit](#feedbackfeedbackcircuit)クラスのコンストラクタに引数として与えることができないので注意．
@@ -375,7 +378,7 @@ int main()
 
 ## 使用例
 2入力のANDをとるだけの関数を実装する場合．
-実際に実装したものは[AND.h]()を参照して下さい．
+実際に実装したものは[AND.h](https://github.com/alain0077/SC_Feedback_Circuit/blob/master/AND.h)と[AND.cpp](https://github.com/alain0077/SC_Feedback_Circuit/blob/master/AND.cpp)を参照して下さい．
 Functionクラスを継承した，ANDクラスを宣言します．
 2入力なので，引数が2つある`Run`関数をオーバーライドします．
 
