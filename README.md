@@ -33,9 +33,6 @@ $Feedback = \sqrt{Out^2} * (1 - \sqrt{Out^2})$
 
 [^nsadd]: Non-Scale-Additionのこと．詳しくは[こちら](https://ieeexplore.ieee.org/document/9139000)の論文を参照．
 
-# 基本的な使い方 <!-- omit in toc -->
-
-
 # 仕様・説明 <!-- omit in toc -->
 本プログラムで実装した一部のクラスや関数の使い方などについて簡単に説明．
 ###### ※使用例などで書いているコードはコンパイルは通らないです．
