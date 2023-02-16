@@ -485,13 +485,13 @@ error..print_Summary();
 [AbsError](#abserror)クラスを継承したクラス．相関による演算誤差を確かめるために，与えられた入力の組み合わせの中で，相関が1，0，-1にそれぞれ一番近いときの誤差を記録する機能を追加した．
 
 ## メンバ関数
-+ [構築・破壊・初期化](#構築初期化-1)
++ [構築・破壊・初期化](#構築破壊初期化-1)
   + Analysis()
   + ~Analysis() = default;
   + reset()
-+ [更新](#更新)
++ [更新](#更新-1)
   + Update(const double&, const double&, const double&) : void
-+ [表示・取得](#表示取得-1)
++ [表示・取得](#表示取得-2)
   + get_MAE() : double
   + get_MAPE() : double
   + get_MAX_AE() : double
@@ -563,7 +563,7 @@ error..print_Summary();
 SNの生成時にSNGに与える整数の乱数を生成するためのクラス．C++のライブラリである`random`を用いた乱数生成の流れをクラスにまとめた．分布生成器は一様整数分布（`uniform_int_distribution`）を，疑似乱数生成器はメルセンヌ・ツイスター法（`mt19937`）を用いている．詳しくは[こちら](https://cpprefjp.github.io/reference/random.html)を参照．乱数生成のためのseed値は，コンストラクタの呼び出し時に`rnd()`で得られる値で初期化される．また，SNのビット長をNとすると，乱数の生成範囲は`1`から`N - 1`までに初期化される．
 
 ## メンバ関数
-+ [構築・破壊・初期化](#構築破壊初期化-2)
++ [構築・破壊・初期化](#構築破壊初期化-3)
   + Random()
   + ~Random() = default;
   + reset() : void
