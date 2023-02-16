@@ -5,7 +5,7 @@ Stochastic Computing（SC）での演算回路についての理論値を求め�
 # FeedbackによるSC演算の実現手法とは？ <!-- omit in toc -->
 プログラム製作者の研究テーマです．簡単に説明すると，「Feedback回路により，従来のSC演算回路よりも低コストで実現できるのでは」という考えをもとに，その実装手順をフレームワークにまとめ，有用性を示すために実現例を模索しています．下図のような回路をFeedback回路と呼んでいます．
 
-![Feedback回路](https://github.com/alain0077/SC_Feedback_Circuit/blob/img/Feedback.png)
+![Feedback回路](https://github.com/alain0077/SC_Feedback_Circuit_Private/blob/img/Feedback.png)
 
 この図のOutput関数とFeedback関数を何かしらの回路に置き換えることにより，目的の演算回路を実現します．
 
@@ -27,7 +27,7 @@ $Feedback = \sqrt{Out^2} * (1 - \sqrt{Out^2})$
 
 が得られます．よって，目的の演算回路が平方根のとき，Feedback関数は次のような図の回路を満たせば良いことが分かります．
 
-![平方根回路](https://github.com/alain0077/SC_Feedback_Circuit/blob/img/SQRT.png)
+![平方根回路](https://github.com/alain0077/SC_Feedback_Circuit_Private/blob/img/SQRT.png)
 
 本手法は[こちら](https://ieeexplore.ieee.org/document/9319166)の論文がもとになっています．ここで説明した平方根の実現の仕方も，少し違うアプローチですが，提案されています．
 
