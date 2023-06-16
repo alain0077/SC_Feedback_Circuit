@@ -22,6 +22,7 @@ private:
     // Minimum value of Absolute Percentage Error
     double _min_per;
 
+protected:
     // Trials
     unsigned int _time;
 

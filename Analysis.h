@@ -17,6 +17,9 @@ private:
     // Close to 0
     std::pair<double, double> _scc;
 
+    // sum of SCC
+    double _sum_scc;
+
 public:
     /// @brief Constractor
     Analysis();

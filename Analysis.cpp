@@ -7,7 +7,7 @@
 using namespace std;
 
 /// @brief Constractor
-Analysis::Analysis() : AbsError(), _max_scc({-1.1, 0.0}), _min_scc({1.1, 0.0}), _scc({1.1, 0.0})
+Analysis::Analysis() : AbsError(), _max_scc({-1.1, 0.0}), _min_scc({1.1, 0.0}), _scc({1.1, 0.0}), _sum_scc(0.0)
 {
 }
 
@@ -37,6 +37,8 @@ void Analysis::Update(const double& ans, const double& val, const double& scc)
     _min_scc = _min_scc.first < scc ? _min_scc : p;
     if(std::abs(_scc.first - scc) < DBL_EPSILON) _scc = std::abs(_scc.second) > std::abs(p.second) ? _scc : p;
     _scc = std::abs(_scc.first) < std::abs(scc) ? _scc : p;
+    
+    _sum_scc += scc;
 }
 
 /// @brief Print All Parameters
@@ -49,6 +51,7 @@ void Analysis::print_Summary() const
     cout << "-----------------------------------" << "\n";
     cout << "|            About SCC            |" << "\n";
     cout << "-----------------------------------" << "\n";
+    cout << "avg : " << _sum_scc / (double)_time << "\n";
     cout << "------------- Maximum -------------" << "\n";
     cout << "SCC : " << _max_scc.first << "\n";
     cout << "Err : " << ((std::abs(_max_scc.second) > DBL_EPSILON) ? _max_scc.second : 0.0) << "\n";
