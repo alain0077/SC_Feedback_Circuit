@@ -1,0 +1,58 @@
+#pragma once
+
+#include <iomanip>
+#include <iostream>
+#include <string>
+#include <sstream>
+
+namespace cui {
+namespace {
+  constexpr auto clear_line = "\033[2K";
+  constexpr auto hide_cursor = "\033[?25l";
+  constexpr auto show_cursor = "\033[?25h";
+  constexpr auto reset = "\033[0m";
+} // ESC seq
+
+namespace utils {
+  inline bool isNum(const std::string& str)
+  {
+    for (auto c : str) {
+      if (std::isdigit(c) == 0) return false;
+    }
+
+    return true;
+  }
+} // namespace utils
+
+std::string Up(std::uint16_t dist)
+{
+  std::ostringstream oss;
+  if(dist <= 0) return "";
+  oss << "\r" << "\x1b[" << dist << "A";
+
+  return oss.str();
+}
+
+void init()
+{
+  std::cout << hide_cursor;
+}
+
+void finit()
+{
+  std::cout << show_cursor;
+  std::cout << reset;
+}
+
+void clearLine()
+{
+  std::cout << clear_line;
+  std::cout << '\r';
+}
+
+void getch(char& c)
+{
+  std::cin >> std::setw(1) >> c;
+  std::cin.width(0);
+}
+} // namespace cui

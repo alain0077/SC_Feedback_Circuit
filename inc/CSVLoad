@@ -1,0 +1,86 @@
+#pragma once
+
+#include <map>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <sstream>
+
+namespace tools {
+class CSVLoad
+{
+public:
+  /// @brief Constructor
+  /// @param fname CSV File name
+  CSVLoad(const std::string& fname)
+  {
+    using namespace std;
+
+    string buf, s;
+    ifstream fs(fname, ios::in);
+
+    if(!fs) throw runtime_error("CSVLoad::CSVLoad : Failed to open " + fname);
+
+    // ヘッダの読み込み
+    getline(fs, buf);
+    stringstream ss(buf);
+
+    while(getline(ss, s, ','))
+    {
+      head_.push_back(s);
+    }
+
+    // データの読み込み
+    while (getline(fs, buf)) {
+      ss.clear();
+      ss.str(buf);
+
+      for(auto h : head_)
+      {
+        getline(ss, s, ',');
+        data_[h].push_back(s);
+      }
+    }
+
+    fs.close();
+  }
+
+  /// @brief Destructor
+  ~CSVLoad()
+  {
+    head_.clear();
+    data_.clear();
+  }
+
+  /// @brief Return header list
+  /// @return Return header list
+  std::vector<std::string> getHeader() { return head_; }
+
+  /// @brief Return data
+  /// @param key 
+  /// @return Return data
+  std::map<std::string, std::vector<std::string>> getData() { return data_; }
+
+  /// @brief Return Key's elements
+  /// @param key 
+  /// @return Return empty vector if not found it
+  /// @note Search with map::find
+  std::vector<std::string> getData(std::string key)
+  {
+    auto it = data_.find(key);
+    if(it == data_.end())
+    {
+      std::vector<std::string> emp; 
+      return emp;
+    }
+    return data_[key];
+  }
+
+private:
+  /// @brief CSV Data
+  std::map<std::string, std::vector<std::string>> data_;
+
+  /// @brief Header
+  std::vector<std::string> head_;
+};
+} // namespace tools

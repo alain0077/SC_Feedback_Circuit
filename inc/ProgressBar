@@ -1,0 +1,84 @@
+#pragma once
+
+#include <algorithm>
+#include <cmath>
+#include <functional>
+#include <iostream>
+#include <iomanip>
+#include <optional>
+#include <sstream>
+#include <string>
+
+#include <sys/ioctl.h>
+#include <unistd.h>
+
+namespace pbr {
+namespace term {
+inline std::optional<std::uint16_t> get_console_width() {
+	struct winsize w;
+	if (ioctl(fileno(stdout), TIOCGWINSZ, &w)) {
+		return std::nullopt;
+	}
+	return w.ws_col;
+}
+} // namespace utils
+
+class pbar
+{
+public:
+  pbar(std::uint32_t total, std::function<std::uint32_t()> func, const std::string& desc = "")
+    : total_(total), get_cnt_(func)
+  {
+    desc_ = desc;
+    if(total_ == 0) throw std::runtime_error("totalに0が設定されました．");
+    digit_ = log10(total_)+1;
+    ncols_ = static_cast<std::uint16_t>(term::get_console_width().value_or(1) - 1);
+  }
+
+  ~pbar() = default;
+
+  void draw() const
+  {
+    using namespace std;
+
+    uint32_t prog = get_cnt_();
+    prog = std::min(prog, total_);
+    int16_t base = desc_.size() + 2 * digit_ + 8;
+
+    uint16_t brackets;
+    uint16_t non_brackets = base;
+		if (ncols_ > non_brackets) {
+			brackets = ncols_ - non_brackets;
+		} else {
+			// disable_time_measurement();
+			brackets = 10;
+		}
+
+    double prog_rate = static_cast<double>(prog) / total_;
+    uint32_t num_brackets = static_cast<uint32_t>(prog_rate * brackets);
+
+    ostringstream oss;
+
+    oss << '\r';
+
+    if (!desc_.empty()) oss << desc_ << ":";
+
+    oss << setw(3) << static_cast<int>(prog_rate * 100) << "%" << "|";
+
+    for (decltype(num_brackets) _ = 0; _ < num_brackets; _++) oss << u8"█";
+
+    for (decltype(num_brackets) _ = 0; _ < brackets - num_brackets; _++) oss << " ";
+
+    oss << "|" << setw(digit_) << prog << "/" << total_ << '\n';
+
+    cout << oss.str();
+  }
+
+private:
+  std::uint16_t ncols_;
+  std::uint16_t digit_;
+  std::uint32_t total_;
+  std::string desc_;
+  std::function<std::uint32_t()> get_cnt_;
+};
+} // namespace pbr

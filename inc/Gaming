@@ -1,0 +1,97 @@
+#include "Singleton.h"
+
+#include <chrono>
+#include <string>
+#include <thread>
+
+namespace {
+std::string clr(const uint8_t& r, const uint8_t& g, const uint8_t& b)
+{
+  return "\033[38;2;" + std::to_string(r) + ";" + std::to_string(g) + ";" + std::to_string(b) + "mX";
+}
+} // ESC seq clr
+
+namespace gmg {
+class Gaming final : public Singleton<Gaming> 
+{
+public:
+  Gaming() = default;
+
+  void init()
+  {
+    clr_ = "";
+    flag_ = true;
+  }
+
+  void Run()
+  {
+    using namespace std;
+    using namespace chrono;
+
+    uint32_t wtime = 5000;
+    
+    while(flag_)
+    {
+      for(int i = 0; i < 255; i++)
+      {
+        if(!flag_) break;
+        clr_ = clr(255, i, 0);
+        this_thread::sleep_for(microseconds(wtime));
+      }
+
+      if(!flag_) break;
+
+      for(int i = 255; i > 0; i--)
+      {
+        if(!flag_) break;
+        clr_ = clr(i, 255, 0);
+        this_thread::sleep_for(microseconds(wtime));
+      }
+
+      if(!flag_) break;
+
+      for(int i = 0; i < 255; i++)
+      {
+        if(!flag_) break;
+        clr_ = clr(0, 255, i);
+        this_thread::sleep_for(microseconds(wtime));
+      }
+
+      if(!flag_) break;
+
+      for(int i = 255; i > 0; i--)
+      {
+        if(!flag_) break;
+        clr_ = clr(0, i, 255);
+        this_thread::sleep_for(microseconds(wtime));
+      }
+
+      if(!flag_) break;
+
+      for(int i = 0; i < 255; i++)
+      {
+        if(!flag_) break;
+        clr_ = clr(i, 0, 255);
+        this_thread::sleep_for(microseconds(wtime));
+      }
+
+      if(!flag_) break;
+
+      for(int i = 255; i > 0; i--)
+      {
+        if(!flag_) break;
+        clr_ = clr(255, 0, i);
+        this_thread::sleep_for(microseconds(wtime));
+      }
+    }
+  }
+
+  std::string get_Clr() { return clr_; }
+
+  void set_false() { flag_ = false; }
+
+private:
+  std::string clr_;
+  bool flag_;
+};
+} // namespace gmg
