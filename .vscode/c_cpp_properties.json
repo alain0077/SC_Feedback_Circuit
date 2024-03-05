@@ -7,7 +7,7 @@
                 "${workspaceFolder}/inc"
             ],
             "defines": [],
-            //"compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "intelliSenseMode": "linux-clang-x64"
         }
