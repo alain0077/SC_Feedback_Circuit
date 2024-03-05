@@ -1,10 +1,10 @@
 # プログラム概要
 Stochastic Computing（SC）での演算回路についての理論値を求めるためのプログラムです．
 また，FeedbackによるSC演算の実現手法によって実現した回路のシミュレーションが簡単にできるようにしました．
-言語はC++です．
+言語はC++17です．実行環境は計算機サーバー（Sota）を想定しています．
 
-# FeedbackによるSC演算の実現手法とは？
-プログラム製作者の研究テーマです．簡単に説明すると，「Feedback回路により，従来のSC演算回路よりも低コストで実現できるのでは」という考えをもとに，その実装手順をフレームワークにまとめ，有用性を示すために実現例を模索しています．下図のような回路をFeedback回路と呼んでいます．
+# はじめに
+FeedbackによるSC演算の実現手法とはプログラム製作者の研究テーマです．簡単に説明すると，「Feedback回路により，従来のSC演算回路よりも低コストで実現できるのでは」という考えをもとに，その実装手順をフレームワークにまとめ，有用性を示すために実現例を模索しています．下図のような回路をFeedback回路と呼んでいます．
 
 ![Feedback回路](https://github.com/alain0077/SC_Feedback_Circuit_Private/blob/img/Feedback.png)
 
@@ -98,7 +98,7 @@ MySim::MySim() : Simulation()
 }
 
 /// @brief エラーを記録するクラスの呼び出し
-void Sim_DIV::set_ERR()
+void MySim::set_ERR()
 {
   /* 演算誤差などを記録するクラス */
   Call_Analyzer("てきとーなタグ");
@@ -193,7 +193,7 @@ Sim_AND::Sim_AND() : Simulation()
 }
 
 /// @brief エラーを記録するクラスの呼び出し
-void Sim_DIV::set_ERR()
+void Sim_AND::set_ERR()
 {
   /* 演算誤差などを記録するクラス */
   // AND回路の乗算
